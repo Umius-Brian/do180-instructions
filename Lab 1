@@ -1,0 +1,68 @@
+CREATE: creates ROL classroom and all VMs needed and starts them
+DELETE: deletes ROL classroom to go back to original start
+START: starts all VMs in classroom
+OPEN CONSOLE: connects to console of VM
+Start: Starts VM
+Shutdown: Gracefully shuts down VM, preserving disk contents
+Power Off: Forcefully shuts down VM, preserving disk contents
+Reset: Forcefully shuts down VM, resets disk to initial state with all contents lost
+
+Objectives:
+  - Configure workstation to access OpenShift cluster, container image registry, and Git repo
+  - Fork from course's sample app repo to personal GitHub, then clone from personal GitHub to workstation machine
+
+# On workstation, execute git configcommand with credential.helper cache parameters to store in cache memory credentials for future use
+[student@workstation ~]$ git config --global credential.helper cache
+  # if prompted for a password while using Git operations on command line, use access token
+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
+
+# Open a terminal on workstation machine and execute this command (cmd-c to start over)
+[student@workstation ~]$ lab-configure
+# API Endpoint: https://api.cluster.domain.example.com:6443
+# Username and password for OpenShift: 
+# Line4/5: Personal GitHub and Quay account names
+# Quay: brian_bui_ibm
+# GitHub: umius-brian
+# Brianisbest06!
+# Run lab-configure again if not working
+# If successful, ready to start exercises
+
+# Fork course's sample apps into personal GitHub account
+# Navigate to github.com/redhattraining/DO180-apps
+# Click Fork on top-right corner and select your username
+[student@workstation ~]$ git clone https://github.com/Umius-Brian/DO180-apps
+
+# Verify that /home/user/DO180-apps is a Git repo
+[student@workstation ~]$ cd DO180-apps
+[student@workstation DO180-apps]$ git status
+# should say "On branch master, nothing to commit"
+
+# Create a new branch to test new personal access token
+[student@workstation DO180-apps]$ git checkout -b testbranch
+# "switched"
+
+# Make a change to TEST file and commit to Git
+[student@workstation DO180-apps]$ echo "DO180" > TEST
+[student@workstation DO180-apps]$ git add .
+[student@workstation DO180-apps]$ git commit -am "DO180"
+
+# Push changes to recently created testing branch
+[student@workstation DO180-apps]$ git push --set-upstream origin testbranch
+# if prompted for username: enter GitHub username
+# if prompted for password: enter access token
+
+# Make another change and notice that you are no longer asked for username and password due to credential helper
+[student@workstation DO180-apps]$ echo "OCP4.6" > TEST
+[student@workstation DO180-apps]$ git add .
+[student@workstation DO180-apps]$ git commit -am "OCP4.6"
+[student@workstation DO180-apps]$ git push
+
+# Verify that /home/user/DO180/apps contains this course's sample apps, then change back to user's home folder
+[student@workstation DO180-apps]$ head README.md
+# "#DO180-apps"
+[student@workstation DO180-apps]$ cd ~
+[student@workstation ~]$
+
+# There should be a local clone of DO180-apps repo on workstation machine
+
+# All exercises that build apps from source start from master branch of DO180-apps Git repo. Exercises that make changes to source code requires making a new branch to host changes so that master contains a good starting point

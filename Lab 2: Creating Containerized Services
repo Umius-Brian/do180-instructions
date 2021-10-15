@@ -1,0 +1,71 @@
+Objectives:
+  - Search for and retrieve container images with Podman
+  - Run and configure containers locally
+  - Use Red Hat Container Catalog
+  - Provision a service using containers
+  - Create database server from a container image
+
+# Use Podman to search for available images from remote or local registries, in order to create containerized apps using an image and file system bundle that provides all the application files, libraries, and dependencies that the app needs to run
+[user@demo ~]$ podman search rhel
+
+# After finding an image, use Podman to pull and fetch the image and save it locally for future use
+[user@demo ~]$ podman pull rhel
+
+# Container images are named based on following syntax:
+registry_name/user_name/image_name:tag
+    # registry name is FQDN name of registry that is storing the image
+    # user name is the name of user or org to which the image belongs
+    # image name must be unique in user namespace
+
+# After the image is stored locally, able to list with images subcommand:
+[user@demo ~]$ podman images
+
+# Podman run command runs a container locally based on an image (must have at least the name of the image)
+
+# All parameters after image name is used as entry point command for the container. The following starts a container from a Red Hat image, setting the entry point to the echo "Hello World" command
+[user@demo ~]$ podman run ubi8/ubi:8.3 echo 'Hello world!'
+
+# To start a container image as a background process
+podman run -d
+
+# To bind a containerized server port to a local port
+podman run -p 8080
+
+# To retrieve a local port (-l flag stands for latest and is used as a replacement for container id, which applies command to latest used container)
+podman port -l
+
+# This example runs a containerized Apache HTTP server in the background, using -p 8080 option to bind HTTP server's port to a local port. It then uses podman port command to retrieve local port on which the container listens. Then it uses this port to create the target URL and fetch root page from Apache HTTP server. The response you receive proves the container is still up and running after run command
+[user@demo ~]$ podman run -d -p 8080 registry.redhat.io/rhel8/httpd-24
+[user@demo ~]$ podman port -l
+    # 8080/tcp -> 0.0.0.0:44389
+[user@demo ~]$ curl http://0.0.0.0:44389
+
+# If image is not locally found when using podman run, it will automatically use pull command to fetch the image
+
+# Podman recognizes a container either with the container name or generated container id. Use --name option to set the container name when running the container with Podman (must be unique)
+# If there is no --name option, Podman will automatically create a random one
+
+# If the image requires user interaction with the console, Pod can redirect container input and output streams to the conosle. To enable interaction with console, use -t and -i flags (or -it)
+-t means pseudo-terminal
+-i means interactive
+-d means container runs detached in the background
+
+# To start a bash terminal inside the container and interactively run commands
+[user@demo ~]$ podman run -it ubi8/ubi:8.3 /bin/bash
+bash-4.2# ls
+bash-4.2# whoami
+    # "root"
+bash-4.2# exit
+[user@demo ~]$
+
+# Some containers need or can use parameters at startup. Best way to provide and consume parameters is via environment variables. Use -e flag to inject env variables into containers at startup. This prints two env variables provided as parameters (other use cases can include setting up credentials into a MySQL database server)
+[user@demo ~]$ podman run -e GREET=Hello -e NAME=RedHat \
+> ubi8/ubi:8.3 printenv GREET NAME
+"Hello" "RedHat"
+[user@demo ~]$
+
+# Sets up credentials for a MySQL database server with env variables
+[user@demo ~]$ podman run --name mysql-custom \
+> -e MYSQL_USER=redhat -e MYSQL_PASSWORD=r3dh4t \
+> -e MYSQL_ROOT_PASSWORD=r3dh4t \
+> -d registry.redhat.io/rhel8/mysql-80
