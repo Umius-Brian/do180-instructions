@@ -65,4 +65,4 @@ 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
 
 # There should be a local clone of DO180-apps repo on workstation machine
 
-# All exercises that build apps from source start from master branch of DO180-apps Git repo. Exercises that make changes to source code requires making a new branch to host changes so that master contains a good starting point
+# All exercises that build apps from source start from master branch of DO180-apps Git repo. Exercises that make changes to source code requires making a new branch to host changes so that master contains a good starting point.

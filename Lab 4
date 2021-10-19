@@ -1,0 +1,52 @@
+Objectives:
+  - Run containers as root and rootless
+
+[student@workstation ~]$ lab container-rootless start
+
+# Run container as root user and check UID of a running process within it
+[student@workstation ~]$ sudo podman run --rm --name asroot -ti \
+> registry.access.redhat.com/ubi8:latest /bin/bash
+
+[root@f95d16108991 /]# whoami
+# root
+[root@f95d16108991 /]# id
+# uid=0(root) gid=0(root) groups=0(root)
+
+# Start a sleep process inside the container
+[root@f95d16108991 /]# sleep 1000
+
+# On a new terminal, run ps to search for the process
+[student@workstation ~]$ sudo ps -ef | grep "sleep 1000"
+# root        3137    3117  0 10:18 pts/0    00:00:00 /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 1000
+
+# Exit the container
+[root@f95d16108991 /]# sleep 1000
+^C
+[root@f95d16108991 /]# exit
+[student@workstation ~]$
+
+# Run the container as a regular user and check UID of a running process within it
+# Start the container from a Red Hat UBI as a regular user
+[student@workstation ~]$ podman run --rm --name asuser -ti \
+> registry.access.redhat.com/ubi8:latest /bin/bash
+
+[root@d289dccd5285 /]# whoami
+# root
+[root@d289dccd5285 /]# id
+# uid=0(root) gid=0(root) groups=0(root)
+
+# Start a sleep process within the container
+[root@d289dccd5285 /]# sleep 2000
+
+# On a new termianl, run ps to search for the process
+[student@workstation ~]$ sudo ps -ef | grep "sleep 2000" | grep -v grep
+# student     3345    3325  0 10:24 pts/0    00:00:00 /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 2000
+
+# Exit the container
+[root@d289dccd5285 /]# sleep 2000
+^C
+[root@d289dccd5285 /]# exit
+[student@workstation ~]$
+
+# On a workstation machine, use the lab command to complete the exercise to ensure that resources from previous exercises do not impact upcoming exercises
+[student@workstation ~]$ lab container-rootless finish
