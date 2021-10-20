@@ -31,16 +31,16 @@ bash-4.2$ mysql -uroot
 # The MySQL command opens the MySQL database interactive prompt. To determine database availability, run the following:
 mysql> show databases;
 
-# To create a new table in items database
+# Create a new table in items database
 mysql> use items;
-Database changed
+# Database changed
 
 # Create a table called Projects in the items database
 mysql> CREATE TABLE Projects (id int NOT NULL,
 -> name varchar(255) DEFAULT NULL,
 -> code varchar(255) DEFAULT NULL,
 -> PRIMARY KEY (id));
-Query OK, 0 rows affected (0.01 sec)
+# Query OK, 0 rows affected (0.01 sec)
 
 # To verify that the table was created
 mysql> show tables;
@@ -53,7 +53,7 @@ mysql> show tables;
 
 # To insert a row into the table
 mysql> insert into Projects (id, name, code) values (1,'DevOps','DO180');
-Query OK, 1 row affected (0.02 sec)
+# Query OK, 1 row affected (0.02 sec)
 
 # To verify that the info was added to the table
 mysql> select * from Projects;

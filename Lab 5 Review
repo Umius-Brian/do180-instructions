@@ -26,3 +26,6 @@ bash-4.4# echo "Hello World" > /var/www/html/index.html
 bash-4.4# exit
 [student@workstation ~]$ curl http://localhost:8080
 # Hello World
+
+[student@workstation ~]$ lab container-review grade
+[student@workstation ~]$ lab container-review finish
