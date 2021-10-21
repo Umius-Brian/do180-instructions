@@ -2,3 +2,21 @@
 -t      --tty, pseudo-terminal is allocated for the container
 -i      --interactive
 -d      --detach, container runs in the background detached
+
+# Linux commands
+ls -a             all files, including dot hidden files
+ls -al            including long-listed format with permissions and date
+ls -lah           including human-readable numbers, such as file size (bytes)
+ls [path]         show info from within path
+man [command]     manual page (Q to exit)
+touch [filename]  create empty file
+code [filename]   create vscode empty file
+cat [filename]    output text within file
+cd -              go back to last previously accessed directory
+mv [file] [path]  move
+cp [file] [path]  copy file to path
+rm [file]         remove file
+rmdir [directory] remove directory (must be empty)
+rm -rf [directory]  remove recursively and forcefully
+ 
+
