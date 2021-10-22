@@ -32,8 +32,14 @@ printf [string]     better than echo, allows for special formatting
 [command] > [file]  redirects output into a file
 grep '[string]' file  finds every string within that file
 sed "s/[oldregex]/[newregex]/g" search and replace
-
-
+head [file]       prints out first 10 lines of a file 
+tail [file]       prints out last 10 lines of a file
+head (or tail) -n [num] [file]  prints out specified number of lines
+chmod +x [file]   allow permissions
+![num]            within history, run this number to run the specified command
+!!                last run command
+kill, killall, xkill  various ways of killing a program
+wget [url]        download from website
 
 
 
