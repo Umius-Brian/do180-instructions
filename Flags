@@ -40,7 +40,8 @@ chmod +x [file]   allow permissions
 !!                last run command
 kill, killall, xkill  various ways of killing a program
 wget [url]        download from website
-
-helllo
+ps                display running process
+ps -A             display all running processes
+ps -T             all processes running within current terminal
 
 
