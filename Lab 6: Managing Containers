@@ -39,7 +39,50 @@ Objectives:
 [user@host ~]$ podman exec -l cat /etc/hostname
 7ed6e671a600
 
-# Lifecycle includes creating, stopping, restarting, or removing containers 
+# Lifecycle includes creating, stopping, restarting, or removing containers; also examining status and metadata for debugging, updating, or reporting purposes
+
+# List running containers
+[user@host ~]$ podman ps
+
+# Podman does not discard containers immediately, rather preserving for postmortem analysis
+# Use -a option to list all containers, even stopped ones
+[user@host ~]$ podman ps -a
+
+# Stop a running container gracefully (sends SIGTERM signal, waits for after grace period, then sends SIGKILL)
+# SIGTERM, once caught, can be interpreted or ignored by the process (almost identical to SIGINT)
+# Use stop over kill usually
+[user@host ~]$ podman stop my-httpd-container
+
+# Kill command sends Unix signals to the main process inside container, Podman accepts either signal name or number
+# If no signal is specified, it sends SIGKILL signal terminating the main process and container
+# Refer to chart for different types of signals and their corresponding number
+[user@host ~]$ podman kill my-httpd-container
+# or
+[user@host ~]$ podman kill -s SIGKILL my-httpd-container
+
+# Restart a stopped container and creates a new one with the same container ID, reusing the stopped container state and file system
+[user@host ~]$ podman restart my-httpd-container
+
+# Removes a container from the host node and discard its state and file system (does not remove images)
+# Clean up a terminated container
+# Using rm -f is identical to kill and rm commands together, removes container even if it has not stopped
+[user@host ~]$ podman rm my-httpd-container
+# To auto-clean
+[user@host ~]$ podman run --rm alpine echo hello
+# To remove all containers
+[user@host ~]$ podman rm -a
+# Before deleting containers, all running containers must be in a stopped status
+# To stop all containers
+[user@host ~]$ podman stop -a
+
+# Inspect, stop, kill, restart, and rm commands can use both container ID and container name
+
+
+
+
+
+
+
 
 
 
