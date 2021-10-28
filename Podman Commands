@@ -1,6 +1,6 @@
 -l      latest (replacement for container id. applies command to the latest used container in any Podman command)
--t      --tty, pseudo-terminal is allocated for the container
--i      --interactive
+-t      --tty, pseudo-terminal is allocated for the container and attaches to standard input of the container
+-i      --interactive, keeps standard input open, even if detached, so the main process can continue waiting for input
 -d      --detach, container runs in the background detached
 
 delete

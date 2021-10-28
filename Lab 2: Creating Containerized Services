@@ -13,9 +13,9 @@ Objectives:
 
 # Container images are named based on following syntax:
 registry_name/user_name/image_name:tag
-    # registry name is FQDN name of registry that is storing the image
-    # user name is the name of user or org to which the image belongs
-    # image name must be unique in user namespace
+# registry name is FQDN name of registry that is storing the image
+# user name is the name of user or org to which the image belongs
+# image name must be unique in user namespace
 
 # After the image is stored locally, able to list with images subcommand:
 [user@demo ~]$ podman images

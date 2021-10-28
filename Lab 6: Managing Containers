@@ -6,3 +6,40 @@ Objectives:
 
 # Podman allows you to run containers, run them in the background, execute new processes inside them, and provide them with resources (fs volumes, network)
 
+# Podman run creates a new container from an image and begins a running process inside the container
+# Podman run also creates a randomly generated unique ID and container name, unless specified with --name option (name must be unique, even among stopped containers)
+# This container runs in the foreground non-interactively
+[user@host ~]$ podman run registry.redhat.io/rhel8/httpd-4
+[user@host ~]$ podman run --name my-httpd-container \
+> registry.redhat.io/rhel8/httpd-24
+
+# To list container ID and names for all actively running containers
+[user@host ~]$ podman ps
+
+# To run container detached as a daemon in the background, use -d option
+# This returns container ID and allows you to run commands in the same termainl while container runs in the background
+[user@host ~]$ podamn run --name my-httpd-container \
+> -d registry.redhat.io/rhel8/httpd-24
+
+# Container image specified command to run to start containerized process (aka entry point)
+# Podman run command overrides the entry point by including command after image name (entry point command must be executable within image)
+# The ls /tmp overrides httpd's entry point, so it does NOT start
+[user@host ~]$ podman run registry.redhat.io/rhel8/httpd-24 ls /tmp
+
+# To begin an bash interactive shell or process that requires user input in a registry.redhat.io/rhel8/httpd-24 container
+[user@host ~]$ podman run -it registry.redhat.io/rhel8/httpd-24 /bin/bash
+
+# Sometimes you need to enter additional commands after entry point (executing an interactive shell inside an already running container, running processes that update or display container files, starting new background processes inside the container)
+# To start an additional process inside an already running container using the container ID
+[user@host ~]$ podman exec 7ed6e671a600 cat /etc/hostname
+
+# For Podman to remember last container ID or name, use -l option
+[user@host ~]$ podman exec my-httpd-container cat /etc/hostname
+7ed6e671a600
+[user@host ~]$ podman exec -l cat /etc/hostname
+7ed6e671a600
+
+# Lifecycle includes creating, stopping, restarting, or removing containers 
+
+
+
