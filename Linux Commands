@@ -38,5 +38,5 @@ ps                display running process
 ps -A             display all running processes
 ps -T             all processes running within current terminal
 -p                parents, create entire directory up to the given directory
-
+-c                allows code to be passed as a string
 
