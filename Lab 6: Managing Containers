@@ -1,0 +1,8 @@
+Objectives:
+  - Use prebuilt container images to create and manage containerized services
+  - Manage container lifecycle from creation to deletion
+  - Save container app data to persistent storage
+  - Use port forwarding to access container
+
+# Podman allows you to run containers, run them in the background, execute new processes inside them, and provide them with resources (fs volumes, network)
+

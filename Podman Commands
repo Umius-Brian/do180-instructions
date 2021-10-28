@@ -1,0 +1,36 @@
+-l      latest (replacement for container id. applies command to the latest used container in any Podman command)
+-t      --tty, pseudo-terminal is allocated for the container
+-i      --interactive
+-d      --detach, container runs in the background detached
+
+delete
+load
+save
+run
+create
+push
+pull
+pause
+unpause
+commit
+export
+start
+restart
+kill
+stop
+rmi
+rm
+rm -f
+exec
+search
+images
+history
+$ tar -tf
+ps -a
+ps
+top
+stats
+logs
+ps-a
+inspect
+
