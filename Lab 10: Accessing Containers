@@ -9,3 +9,6 @@ Objectives:
 [user@host ~]$ podman run -d --name apache1 -p 8080:80 \
 > registry.redhat.io/rhel8/httpd-24
 
+# -p option binds the port to specified IP address
+[user@host ~]$ podman run -d --name apache2 \
+> -p 127.0.0.1:8081:80 registry.redhat.io/rhel8/httpd-24
