@@ -1,0 +1,11 @@
+Objectives:
+  - Networking
+  - Remote connection to services within a container
+
+# Rootless containers have no IP address
+# Define port forwarding rules to allow external access to a container service
+# -p [IP_Address:][host_port:][container_port]
+# Create an externally accessible container where any request to host port 8080 are forwarded to container port 80
+[user@host ~]$ podman run -d --name apache1 -p 8080:80 \
+> registry.redhat.io/rhel8/httpd-24
+
