@@ -42,3 +42,8 @@ ps -T             all processes running within current terminal
 -R                list directory tree recursively
 chown             change ownership and group ownership of files/directories
 :q                to quit man pages
+-v                verbose shell mode, useful for echoing command before execution
+-l                symbolic link that points to another file or directory
+-d                list directory entries instead of contents
+-Z                
+
