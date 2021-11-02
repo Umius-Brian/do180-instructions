@@ -1,0 +1,51 @@
+Objectives:
+  - Save application data via persistent storage
+  - Configure host directories to use as container volumes
+  - Mount a volume inside a container
+
+# Running container gets a container storage layer over the base container image
+# At first, this is the only read/write volatile layer and is used to create emphemeral (working, temporary, and log) files; these files have no effect on the application, even if they are lost
+# Container storage layer gets uniquely created every time a container is created, allowing for resource isolation
+# However, to extend data beyond the container life, we need persistent storage
+
+# To remove container storage and reclaim the space
+podman rm [container_id]
+
+# To find stopped container IDs
+podman ps -a
+
+# Podman can mount host directories inside a running container, which the container sees as container storage, but they can be mounted to other containers whenever needed
+# Cannot have different users with the same UID inside different containers
+# Usernames and groupnames are not part of the kernel (if there are different usernames, you cannot have the same privileges for the same UID/GID, even inside different containers)
+# There's a single kernel and a single shared pool of UIDs and GIDs, so if you are root outside the container, then you are root inside (UID = 0)
+# Host directories must be configured with ownership and permissions to have access to container; RHEL also requires host directory have appropriate SELinux context (container_file_t SELinux context, which Podman uses to restrict host system files that the container can access); avoids leakage between host system and inside running containers
+
+# Tip: namespaces do not restrict access to physical resources such as CPU, memory, or disk (those are restricted by cgroups)
+
+# Set up host directory
+[user@host ~]$ mkdir /home/student/dbfiles
+
+# To allow the user running processes in the container to have write access to directory, you should find the UID of the container and use podman unshare to execute commands within the same user namespace as the running process inside the container
+# For MySQL service provided by Red Hat, the UID is 27
+# Unshare command allows you to run a program with namespaces unshared from its parent, basically lets you run whatever program you pass it in a new set of namespaces
+[user@host ~]$ podman unshare chown -R 27:27 /home/student/dbfiles
+
+# Apply container_file_t context to directory and all subdirectories to allow container access to the host directory
+[user@host ~]$ sudo semanage fcontext -a -t container_file_t '/home/student/dbfiles(/.*)?'
+# (/.*)? means folder dbfiles and possible subdirectories/files
+# semanage is a SELinux management tool to configure elements of SELinux policy without having to modify or recompile policy sources
+# semanage fcontext changes SELinux context of files
+
+# Apply SELinux container policy set up in the first step to the newly created directory
+[user@host ~]$ sudo restorecon -Rv /home/student/dbfiles
+# -R changes files and labels recursively and -v shows changes in file labels
+# Host directory must be configured before starting the container that uses the directory
+
+# Then mount the host directory to a container using podman run -v with specified host directory path and container storage path separated by colon
+[user@host ~]$ podman run -v /home/student/dbfiles:var/lib/mysql rhmap47/mysql
+# /var/lib/mysql already exists inside the container image named mysql
+# /home/student/dbfiles mount overlays but doesn't remove the content from the image (if the mount is removed, then original content is accessible again)
+# We use the host directory for the MySQL database files located under var/lib/mysql
+
+# We make a host directory, unshare and change owner recursively using the UID of the container to the host directory, use container_file_t to change and apply SELinux context to the directory and all of its subdirectories, apply the SELinux container policy to the newly created directory, then mount the host directory to the container inside its database directory
+

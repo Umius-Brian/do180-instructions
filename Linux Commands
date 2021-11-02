@@ -39,4 +39,6 @@ ps -A             display all running processes
 ps -T             all processes running within current terminal
 -p                parents, create entire directory up to the given directory
 -c                allows code to be passed as a string
-
+-R                list directory tree recursively
+chown             change ownership and group ownership of files/directories
+:q                to quit man pages

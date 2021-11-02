@@ -1,0 +1,75 @@
+Objectives:
+  - Create MySQL database instance
+  - Start a database from container image and store info inside that database
+
+# Open a terminal as the student user and run the following:
+[student@workstation ~]$ lab container-create start
+
+# Create a container instance. Login to Red Hat Container Catalog
+[student@workstation ~]$ podman login registry.redhat.io
+
+# Start a container from Red Hat Container Catalog MySQL image
+[student@workstation ~]$ podman run --name mysql-basic \
+> -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 \
+> -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 \
+> -d registry.redhat.io/rhel8/mysql-80:1
+
+# Now, a container has been started in the background with a database named items owned by a user named user 1 with password as mypa55 and database administrator password set.
+
+# Verify that the container starts without errors
+[student@workstation ~]$ podman ps --format "{{.ID}} {{.Image}} {{.Names}}"
+2d37682eb33a registry.redhat.io/rhel8/mysql-80:1 mysql-basic
+
+# Access container sandbox by running the following, which starts a Bash shell, running as the mysql user inside the MySQL container
+[student@workstation ~]$ podman exec -it mysql-basic /bin/bash
+bash-4.2$
+
+# Add data to database by connecting to MySQL as the database administrator user (root)
+bash-4.2$ mysql -uroot
+  # logs in as user root
+
+# The MySQL command opens the MySQL database interactive prompt. To determine database availability, run the following:
+mysql> show databases;
+
+# Create a new table in items database
+mysql> use items;
+# Database changed
+
+# Create a table called Projects in the items database
+mysql> CREATE TABLE Projects (id int NOT NULL,
+-> name varchar(255) DEFAULT NULL,
+-> code varchar(255) DEFAULT NULL,
+-> PRIMARY KEY (id));
+# Query OK, 0 rows affected (0.01 sec)
+
+# To verify that the table was created
+mysql> show tables;
+---------------------
+| Tables_in_items     |
+---------------------
+| Projects            |
+---------------------
+1 row in set (0.00 sec)
+
+# To insert a row into the table
+mysql> insert into Projects (id, name, code) values (1,'DevOps','DO180');
+# Query OK, 1 row affected (0.02 sec)
+
+# To verify that the info was added to the table
+mysql> select * from Projects;
+----------------------
+| id | name      | code  |
+-----------------------+
+|  1 | DevOps    | DO180 |
+-----------------------+
+1 row in set (0.00 sec)
+
+# Exit from MySQL prompt and container
+mysql> exit
+Bye
+bash-4.2$ exit
+exit
+
+# On workstation, run this script to complete the lab
+[student@workstation ~]$ lab container-create finish
+

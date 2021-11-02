@@ -1,0 +1,69 @@
+Objective:
+  - Create and manage SQL container
+
+# Begin by making sure workstation machine had podman command available and is correctly set up
+[student@workstation ~]$ lab manage-lifecycle start
+
+# Download MySQL container image and start it. It won't because env variables must be provided to the image
+
+# Login to Red Hat Container Catalog with your Red Hat account
+[student@workstation ~]$ podman login registry.redhat.io
+
+# Download MySQL container image and attempt to start it
+[student@workstation ~]$ podman run --name mysql-db \
+> registry.redhat.io/rhel/mysql-80:1
+# It will specify for env variables
+# MYSQL_USER (regex: '^$')
+# MYSQL_PASSWORD (regex: '^[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]$')
+# MYSQL_DATABASE (regex: '^$')
+# `Or the following environment variable:`
+# MYSQL_ROOT_PASSWORD (regex: '^[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]$')
+# Or both.
+# Optional Settings:
+# ...output omitted...
+
+# Hint: it won't ask for env variables if you run as a daemon using -d option, but it will still show up in container logs
+[student@workstation ~]$ podman logs mysql-db
+
+# Create a new container and specify each required variable using -e parameter
+[student@workstation ~]$ podman run --name mysql \
+> -d -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 \
+> -e MYSQL_DATABASE=items -e MYSQL_ROOT=r00tpa55 \
+> registry.redhat.io/rhel8/mysql-80:1
+
+# After receiving container ID, verify that the container is up and running
+[student@workstation ~]$ podman ps --format="{{.ID}} {{.Names}} {{.Status}}"
+# a49dba9ff17f   mysql   Up About a minute ago
+
+# Copy database file to mysql container
+[student@workstation ~]$ podman cp \
+> /home/student/DO180/labs/manage-lifecycle/db.sql mysql:/
+
+# Populate items database with Project table
+[student@workstation ~]$ podman exec mysql /bin/bash \
+> -c 'mysql -uuser1 -pmypa55 items < /db.sql'
+
+# Create another container using the same container image and interactively enter bash shell
+[student@workstation ~]$ podman run --name mysql-2 \
+> -it registry.redhat.io/rhel8/mysql-80:1 /bin/bash
+# bash-4.4$
+
+# Connect to MySQL container in the new container
+bash-4.4$ mysql -uroot
+
+# Error will display saying it cannot connect to local MySQL
+# This is because the container executed /bin/bash command rather than starting MySQL server
+# Exit the container
+bash-4.4$ exit
+
+# Verify that mysql-2 container is not running
+[student@workstation ~]$ podman ps -a \
+> --format="{{.ID}} {{.Names}} {{.Status}}"
+
+# Query mysql container to list all rows in the Projects table by instructing the bash shell to query items database using mysql command
+[student@workstation ~]$ podman exec mysql /bin/bash \
+> -c 'mysql -uuser1 -pmypa55 -e "select * from items.Projects;"'
+# id      name    code
+# 1       DevOps  DO180
+
+[student@workstation ~]$ lab manage-lifecycle finish
