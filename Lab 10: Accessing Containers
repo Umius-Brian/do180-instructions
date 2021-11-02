@@ -1,5 +1,5 @@
 Objectives:
-  - Networking
+  - Networking basics
   - Remote connection to services within a container
 
 # Rootless containers have no IP address
@@ -12,3 +12,21 @@ Objectives:
 # -p option binds the port to specified IP address
 [user@host ~]$ podman run -d --name apache2 \
 > -p 127.0.0.1:8081:80 registry.redhat.io/rhel8/httpd-24
+
+# A randomly available host port will be assigned if not predetermined
+[user@host ~]$ podman run -d --name apache3 -p 127.0.0.1::80 \
+> registry.redhat.io/rhel8/httpd-24
+
+# A randomly available host port will also be assigned if -p option, all requests will then be forwarded to container port
+# Any routable request to host port 37068 is forwarded to container port 80
+[user@host ~]$ podman run -d --name apache24 \
+> -p 80 registry.redhat.io/rhel8/httpd-24
+[user@host ~]$ podman port apache24
+# 80/tcp -> 0.0.0.0:37068
+
+# To view port 
+[user@host ~]$ podman port apache3
+# 80/tcp -> 127.0.0.1:35134
+[user@host ~]$ curl 127.0.0.1:35134
+# <html><body><h1>It works!</h1></body></html>
+
