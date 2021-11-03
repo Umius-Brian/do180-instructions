@@ -42,6 +42,7 @@ podman ps -a
 # Host directory must be configured before starting the container that uses the directory
 
 # Then mount the host directory to a container using podman run -v with specified host directory path and container storage path separated by colon
+# Podman mounts volumes in a container with the -v option
 [user@host ~]$ podman run -v /home/student/dbfiles:var/lib/mysql rhmap47/mysql
 # /var/lib/mysql already exists inside the container image named mysql
 # /home/student/dbfiles mount overlays but doesn't remove the content from the image (if the mount is removed, then original content is accessible again)

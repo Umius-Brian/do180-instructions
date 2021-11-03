@@ -47,3 +47,5 @@ chown             change ownership and group ownership of files/directories
 -d                list directory entries instead of contents
 -Z                
 -e                instruct script to exit on error
+-L                follow symbolic links
+-s                read same file
