@@ -2,6 +2,11 @@
 -t      --tty, pseudo-terminal is allocated for the container and attaches to standard input of the container
 -i      --interactive, keeps standard input open, even if detached, so the main process can continue waiting for input
 -d      --detach, container runs in the background detached
+-p      --publish, used for port forwarding
+-h      --hostname, sets container host name that is available inside container
+-can    reads commands from string
+-e      --env, set up environment variables
+
 
 delete
 load

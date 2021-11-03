@@ -46,4 +46,4 @@ chown             change ownership and group ownership of files/directories
 -l                symbolic link that points to another file or directory
 -d                list directory entries instead of contents
 -Z                
-
+-e                instruct script to exit on error
