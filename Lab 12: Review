@@ -43,3 +43,42 @@ Objectives:
 > -v /home/student/local/mysql:/var/lib/mysql/data -p 13306:3306 \
 > -e MYSQL_USER=user1 -e MYSQL_PASSWORD:mypa55 -e MYSQL_DATABASE=items \
 > -e MYSQL_ROOT_PASSWORD=r00tpa55 registry.redhat.io/rhel8/mysql-80:1
+
+# Verify
+[student@workstation ~]$ podman ps --format="{{.ID}} {{.Names}}"
+
+# Save list of containers (including stopped ones) to /tmp/my-containers file
+[student@workstation ~]$ podman ps -a > /tmp/my-containers
+
+# Access Bash shell inside container and verify items database and Item table are available and with data
+# Access Bash shell inside container
+[student@workstation ~]$ podman exec -it /bin/bash
+# Connect to MySQL server
+bash-4.4$ mysql -uroot
+# List all databases and confirm items database is there
+mysql> show databases;
+# List all tables from items database and verify that Item table is there
+mysql> use items;
+mysql> show tables;
+# View the data from Item table
+mysql> SELECT * FROM Item;
+# Exit from MySQL client and container shell
+mysql> exit
+bash-4.4$ exit
+
+# Use port forwarding to insert a new row into Item table with a 'description' value of 'Finished lab' and 'done' value of '1'
+# Connect to MySQL database
+[student@workstation ~]$ mysql -uuser1 -h workstation.lab.example.com \
+> -pmypa55 -P13306 items
+# mysql>
+# Insert the new row
+mysql> insert into Item (description, done) values ('Finished lab', 1);
+# Exit from MySQL client
+mysql> exit
+
+# Because the first container isn't required anymore, remove it to release resources
+[student@workstation ~]$ podman rm mysql-1
+
+[student@workstation ~]$ lab manage-review grade
+[student@workstation ~]$ lab manage-review finish
+
