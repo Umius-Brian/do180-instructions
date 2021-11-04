@@ -1,0 +1,75 @@
+[student@workstation ~]$ lab image-operations start
+
+# Login to Quay and use the image available at quay.io/redhattraining/httpd-parent
+# Podman forwards incoming requests on host TCP port 8180 to container TCP port 80
+[student@workstation ~]$ podman login quay.io
+[student@workstation ~]$ podman run -d --name official-httpd \
+> -p 8180:80 quay.io/redhattraining/httpd-parent
+
+# Create an HTML page on the container
+# First, access the container shell and create an HTML page
+[student@workstation ~]$ podman exec -it official-httpd /bin/bash
+bash-4.4# echo "DO180 Page" > /var/www/html/do180.html
+
+# Exit from the container
+bash-4.4# exit
+
+# Ensure the HTML page is reachable from workstation machine
+[student@workstation ~]$ curl 127.0.0.1:8180/do180.html
+# DO180 Page
+
+# Use podman diff to examine differences in the container between image and new layer created by the container
+[student@workstation ~]$ podman diff official-httpd
+
+# Web server container images label /var/www/html as a volume
+# Files added to this directory are not considered part of the container file system and would not show in podman diff
+# quay.io/redhattraining/httpd-parent does not have this directory as a volume so any changes to /var/www/html/do180.html is considered a change to the container file system
+
+# Create a new image with the changes implemented by the container
+# First, stop the container
+[student@workstation ~]$ podman stop official-httpd
+
+# Commit the changes to a new image with a new name, use your name as the author
+[student@workstation ~]$ podman commit \
+> -a 'Your Name' official-httpd do180-customer-httpd
+
+# List all available images
+[student@workstation ~]$ podman images
+# REPOSITORY                            TAG      IMAGE ID       CREATED   SIZE
+# localhost/do180-custom-httpd          latest   31c3ac78e9d4   ...       ...
+# quay.io/redhattraining/httpd-parent   latest   2cc07fbb5000   ...       ...
+# First 12 characters of the image hash should match original image
+
+# Publish to a container registry
+# First, load the classroom environment configuration created in the first exercise
+[student@workstation ~]$ source /usr/local/etc/ocp4.config
+
+# Tag the image with the registry host name and tag
+[student@workstation ~]$ podman tag do180-custom-httpd \
+> quay.io/${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+
+# Ensure the image is in the cache
+[student@workstation ~]$ podman images
+
+# Publish
+[student@workstation ~]$ podman push \
+> quay.io/${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+# This creates a private repo in your Quay account, which is not allowed by free accounts
+# Create a public repo prior to pushing or change repo to private after
+
+# Verify the image is available in Quay by podman search (which requires the image to be available, which might take hours)
+# Instead, use pull to fetch the image, which proves the image is available
+# -q option suppresses output info when pulling images
+[student@workstation ~]$ podman pull \
+> -q quay.io/${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+
+# Create a container from the newly published image
+# Base image is now your_quay_username/do180-custom-httpd:v1.0
+[student@workstation ~]$ podman run -d --name test-httpd -p 8280:80 \
+> ${RHT_OCP4_QUAY_USER}/do180-custom-httpd:v1.0
+
+# Access the HTML page
+[student@workstation ~]$ curl http://localhost:8280/do180.html
+# DO180 Page
+
+[student@workstation ~]$ lab image-operations finish

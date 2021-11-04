@@ -6,6 +6,7 @@
 -h      --hostname, sets container host name that is available inside container
 -can    reads commands from string
 -e      --env, set up environment variables
+-q      --quiet, suppress output info when pulling images
 
 
 delete
