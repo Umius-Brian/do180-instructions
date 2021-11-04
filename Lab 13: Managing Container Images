@@ -16,11 +16,15 @@ registries = ["registry.access.redhat.com", "quay.io"]
 registries = ['localhost:5000']
 
 # Images can be searched via Podman
+# Displays images available for download from the specified registry
 [user@host ~]$ podman search [OPTIONS] <term>
 # --limit <number> = limits the number of listed images per registry
 # --filter <filter=value> = filters output based on condition (i.e. stars=<number>, is-automated=<true|false>, is-official=<true|false>)
 # --tls-verify <true|false> = enables or disables HTTPS certificate validation for all used registries
 # --list-tags = lists all available tags in the repo for the image
+
+# To list all available image tags for httpd container image
+podman search --list-tags httpd
 
 # Or via API
 # To list all repos in a registry, use /v2/_catalog endpoint; n parameter limits the number of repos returned

@@ -1,0 +1,71 @@
+Objectives:
+  - Save, load, delete container images locally
+  - Create new images from containers and update image metadata
+  - Manage image tags for distribution
+
+# To send a container to another host or server after working on it locally, you can either save the image to a .tar file or publish (push) to a registry
+
+# To save an existing image from Podman local storage as .tar for backup purposes, use podman save
+# Generated file is not a regular TAR archive, but it contains image metadata and original image layers
+# -o option sidesteps sending the image as binary data to stdout
+[user@host ~]$ podman save [-o FILE_NAME] IMAGE_NAME[:TAG]
+[user@host ~]$ podman save \
+> -o mysql.tar registry.redhat.io/rhel8/mysql-80
+# Can also use --compress parameter to save disk space
+# Load command uses gunzip command before importing the file to local storage
+
+# To restore an image and import back to local storage, use podman load
+[user@host ~]$ podman load [-i FILE_NAME]
+[user@host ~]$ podman load -i mysql.tar
+
+# To delete image from local storage
+# Can be referenced by name or ID
+# Cannot delete image while container is running; containers must be stopped and removed; use -f option to forcefully remove an image
+[user@host ~]$ podman rmi [OPTIONS] IMAGE [IMAGE...]
+
+# To delete all images not used by any container
+[user@host ~]$ podman rmi -a
+
+# Containers should be built with Containerfile for a clean, lightweight set of image layers without log files, temporary files, or artifacts created by container customization
+# Containers can be built without Containerfile as is
+# An alternative is to change a running container in-place, saving its layers to create a new image, by using podman commit
+# Not recommended because it keeps logs and PID files, Containerfile is recommended
+[user@host ~]$ podman commit [OPTIONS] CONTAINER \
+> [REPOSITORY[:PORT]/]IMAGE_NAME[:TAG]
+# Options include: --author ""(identifies who created the image), --message ""(includes a commit message to the registry, not available in OCI format), and --format (selects image format, such as oci or docker)
+
+# To find ID of a running container
+[user@host ~]$ podman ps
+
+# To identify which image files were changed while setting the container to its desired state, use diff which only requires name or ID
+# Files that are mounted to a running container are not considered part of a container file system
+[user@host ~]$ podman diff mysql-basic
+
+# To retrieve list of mounted files and directories for a running container
+[user@host ~]$ podman inspect \
+> -f "{{range .Mounts}}{{println .Destination}}{{end}}" CONTAINER_NAME/ID
+
+# To commit changes to another image
+# This creates a new image called mysql-custom
+[user@host ~]$ podman commit mysql-basic mysql-custom
+
+# Tags distinguish multiple releases or versions of the same software
+[user@host ~]$ podman tag [OPTIONS] IMAGE[:OPTIONAL_TAG] \
+> [REGISTRYHOST/][USERNAME/]NAME[:TAG]
+[user@host ~]$ podman tag mysql-custom devops/mysql
+# mysql-custom option corresponds to the image name in the registry
+
+# To use a different tag name
+[user@host ~]$ podman tag mysql-custom  devops/mysql:snapshot
+
+# An image can have multiple tags, to remove them:
+[user@host ~]$ podman rmi devops/mysql:snapshot
+
+# To remove an image referred to by multiple tags, first remove each tag individually
+
+# Best practice is to tag according to release of a version to avoid pulling new images
+
+# Images must reside in Podman local storage and be tagged for ID purposes in order to be published to a registry
+[user@host ~]$ podman push [OPTIONS] IMAGE [DESTINATION]
+[user@host ~]$ podman push quay.io/bitnami/nginx
+# This pushes to Quay.io registry
