@@ -24,6 +24,8 @@ Objectives:
 [user@host ~]$ podman rmi [OPTIONS] IMAGE [IMAGE...]
 
 # To delete all images not used by any container
+# rmi removes images from host node (local storage); if there are multiple tags on an image, using tag as a parameter only removes the tag; if there is only one, both the image and tag are removed; does not remove image from a registry; does not remove unused images; cannot delete image while containers are using it (must stop and remove all containers using that image before deleting it, unless -f)
+# rm is for containers, rmi is for images
 [user@host ~]$ podman rmi -a
 
 # Containers should be built with Containerfile for a clean, lightweight set of image layers without log files, temporary files, or artifacts created by container customization

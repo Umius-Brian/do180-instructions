@@ -58,8 +58,6 @@ root@cfa21f02a77d:/# exit
 
 # Remove the snapshot image
 [student@workstation ~]$ podman rmi do180/mynginx:v1.0-SNAPSHOT
-# rmi removes tags as well
-# rm is for containers, rmi is for images
 
 # Verify that it has been deleted
 [student@workstation ~]$ podman images
