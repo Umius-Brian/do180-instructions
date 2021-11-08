@@ -70,6 +70,6 @@ bash-4.4# exit
 
 # Access the HTML page
 [student@workstation ~]$ curl http://localhost:8280/do180.html
-# DO180 Page
+# DO180 Pagej
 
 [student@workstation ~]$ lab image-operations finish

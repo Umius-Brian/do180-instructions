@@ -1,0 +1,15 @@
+Objectives:
+  - Design a Containerfile to build a custom image
+  - Find existing Containerfiles to use as a starting point for custom image builds
+  - Describe S2I alternative to Containerfiles
+
+# Previous methods created containers, which you then modify the requirements of the app to run in it, then commit changes to an image, were only suitable for using or testing very specific changes; they do not follow best practices such as maintainability, automation of building, and repeatability
+# Containerfiles (aka Dockerfiles) are easy to share, version control, reuse, and extend; can also extend child from parent images
+# Existing Containerfiles may be trimmed by removing unused material or locked to a specific release; other advantages include adding runtime libraries and internal libraries to be shared as a single image layer by multiple images for different applications
+# Sources for parent images or modification of Containerfiles: Docker Hub, Red Hat Software Collections Library (RHSCL or Software Collections)
+# RHSCL packages do not replace or conflict with default RHEL packages due to standard release schedules that adhere to specific guidelines regarding environment stability
+# All RHEL users can use RHSCL packages
+# RHSCL Containerfiles are found in the official repo; CentOS Containerfiles can be found from GitHub; Quay is primarily used for team collaboration offered by CoreOS
+
+# Source-to-Image (S2I) is an OpenShift Container Platform feature
+# Start a container from a high-quality base (builder) image with the necessary runtime and dependencies such as package managers and compilers, fetch code from Git and send to the container for app binary files building, then save the container as a new container image with runtime and binaries; an advantage over Containerfiles is that it creates smaller container images with fewer layers

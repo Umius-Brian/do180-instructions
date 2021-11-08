@@ -3,7 +3,7 @@ Objectives:
 
 [student@workstation ~]$ lab image-review start
 
-# Download quay.io/redhattraining/nginx:1.17 image and ensure that you have done successfully
+# Download quay.io/redhattraining/nginx:1.17 image and ensure that you have done so successfully
 [student@workstation ~]$ podman pull quay.io/redhattraining/nginx:1.17
 [student@workstation ~]$ podman images
 
@@ -47,7 +47,7 @@ root@cfa21f02a77d:/# exit
 [student@workstation ~]$ podman images
 
 # Remove the snapshot image from local storage
-# However, despite official-nginx-dev being stopped, it is still present; remove it
+# Despite official-nginx-dev being stopped, it is still present; remove it
 [student@workstation ~]$ podman ps -a \
 > --format="{{.ID}} {{.Names}} {{.Status}}"
 [student@workstation ~]$ podman rm official-nginx-dev

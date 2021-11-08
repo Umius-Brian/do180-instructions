@@ -33,6 +33,7 @@ Objectives:
 # Containers should be built with Containerfile for a clean, lightweight set of image layers without log files, temporary files, or artifacts created by container customization
 # Containers can be built without Containerfile as is
 # An alternative is to change a running container in-place, saving its layers to create a new image, by using podman commit
+# This saves the new image to local host
 # Not recommended because it keeps logs and PID files, Containerfile is recommended
 [user@host ~]$ podman commit [OPTIONS] CONTAINER \
 > [REPOSITORY[:PORT]/]IMAGE_NAME[:TAG]
