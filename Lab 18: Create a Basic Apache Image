@@ -1,0 +1,45 @@
+Objectives:
+  - Build a custom Apache image built on Red Hat UBI 8 image
+
+[student@workstation ~]$ lab dockerfile-create start
+
+# Create a new Containerfile in order to build the Apache proposed version
+[student@workstation ~]$ vim /home/student/DO180/labs/dockerfile-create/Containerfile
+ 
+# In the Containerfile
+FROM ubi8/ubi:8.3
+
+MAINTAINER {Your Name} <youremail>
+
+LABEL description="A custom Apache container based on UBI 8"
+
+RUN yum install -y httpd && \
+    yum clean all
+
+RUN echo "Hello from Containerfile" > /var/www/html/index.html
+
+# default port for an Apache server
+EXPOSE 80
+
+CMD ["httpd", "-D", "FOREGROUND"]
+
+[student@workstation ~]$ cd /home/student/DO180/labs/dockerfile-create
+[student@workstation dockerfile-create]$ podman build --layers=false \
+> -t do180/apache .
+# --layers=false option instructs Podman to delete intermediate images, which are not viewable unless with -a option
+
+
+[student@workstation dockerfile-create]$ podman images
+[student@workstation dockerfile-create]$ podman run --name lab-apache \
+> -d -p 10080:80 do180/apache
+[student@workstation dockerfile-create]$ podman ps
+[student@workstation dockerfile-create]$ curl 127.0.0.1:10080
+# Hello from Containerfile
+
+[student@workstation ~]$ lab dockerfile-create finish
+
+
+
+
+
+

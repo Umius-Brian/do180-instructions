@@ -15,10 +15,14 @@ Objectives:
 # Start a container from a high-quality base (builder) image with the necessary runtime and dependencies such as package managers and compilers, fetch code from Git and send to the container for app binary files building, then save the container as a new container image with runtime and binaries; an advantage over Containerfiles is that it creates smaller container images with fewer layers
 
 # Create a working directory, which contains all the files necessary to build the image, but never use the root directory (/) for security reasons
-# COPY is not able to copy a remote file using its URL; ADD copies files or folders from a local or remote source and adds them to the container file system (local files must be in working directory)
+# COPY is not able to copy a remote file using its URL; ADD copies files or folders from a local or remote source and adds them to the container file system (local files must be in working directory); if the source is a file system path, then it must be inside the working directory; if the source is a compressed file, then ADD decompresses the file to the destination folder (COPY does not); ADD and COPY has root as owner even if USER instruction if specified (have RUN instructions after the copy to change the owner if so)
 # Always use a different USER than root
-# If ENTRYPOINT is omitted, default is /bin/sh -c; ENTRYPOINT specifies the default command and parameters to execute when the image runs in a container (max one)
-# CMD adds default arguments to ENTRYPOINT (max one)
-# ENTRYPOINT parameter takes the place of CMD, but having separate ENTRYPOINT and CMD allows the CMD to be overwritable when the container starts
-# ENTRYPOINT and CMD should always use JSON array format (["", ""])
+# If ENTRYPOINT is omitted, default is /bin/sh -c; ENTRYPOINT specifies the default command and parameters to execute when the image runs in a container (max one); CMD adds default arguments to ENTRYPOINT (max one)
+# ENTRYPOINT parameter takes the place of CMD, but having separate ENTRYPOINT and CMD allows the CMD to be overwritable when the container starts; or have no ENTRYPOINT and only CMD parameters
+# ENTRYPOINT and CMD should always use JSON array format (["", ""]) aka EXEC form, and not Shell form
+
+# Have RUN instructions on one line to minimize image layers; use escape code if needed
+
+podman build -t NAME:TAG DIR
+# use -f for different working directory
 
