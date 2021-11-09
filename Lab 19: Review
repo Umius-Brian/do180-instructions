@@ -1,0 +1,42 @@
+Objectives:
+  - Create a Containerfile to build a custom image based on RHEL 8.3 UBI and serve a custom HTML page
+
+[student@workstation ~]$ lab dockerfile-review start
+
+[student@workstation ~]$ cd /home/student/DO180/labs/dockerfile-review/
+[student@workstation dockerfile-review]$ vim Containerfile
+
+FROM ubi8/ubi:8.3
+MAINTAINER {my name} <email>
+ENV PORT 8080
+RUN yum install -y httpd && \
+    yum clean all
+RUN sed -ri -e "/^Listen 80/c\Listen ${PORT}" /etc/httpd/conf/httpd.conf && \
+    chown -R apache:apache /etc/httpd/logs/ && \
+    chown -R apache:apache /run/httpd/
+# sed is a stream editor which performs basic text transformations on an input stream, original input doesn't modify unless we use -i flag
+# Change Apache config file to listen to port 8080 instead of default port 80
+# Change ownership to user and group apache
+USER apache
+EXPOSE ${PORT}
+COPY ./src/ /var/www/html/
+CMD ["httpd", "-D", "FOREGROUND"]
+
+# Build the custom image with the name do180/custom-apache
+[student@workstation dockerfile-review]$ podman build --layers=false \
+> -t do180/custom-apache
+
+[student@workstation dockerfile-review]$ podman images
+
+# Create a new container in detached mode with the given characteristics
+[student@workstation dockerfile-review]$ podman run -d \
+> --name containerfile -p 20080:8080 do180/custom-apache
+
+# Verify the container is running
+[student@workstation dockerfile-review]$ podman ps
+
+# Verify the server is serving the HTML file
+[student@workstation dockerfile-review]$ curl 127.0.0.1:20080
+
+[student@workstation ~]$ lab dockerfile-review grade
+[student@workstation ~]$ lab dockerfile-review finish

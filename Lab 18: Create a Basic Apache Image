@@ -26,7 +26,7 @@ CMD ["httpd", "-D", "FOREGROUND"]
 [student@workstation ~]$ cd /home/student/DO180/labs/dockerfile-create
 [student@workstation dockerfile-create]$ podman build --layers=false \
 > -t do180/apache .
-# --layers=false option instructs Podman to delete intermediate images, which are not viewable unless with -a option
+# --layers=false option instructs Podman to delete intermediate images (created during build process), which are not viewable unless with -a option
 
 
 [student@workstation dockerfile-create]$ podman images
