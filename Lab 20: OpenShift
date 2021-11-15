@@ -1,0 +1,24 @@
+Objectives:
+  - Create standard K8s resources
+
+# Before interacting with a cluster, login
+oc login <clusterURL>
+
+# To create a pod from an image, OpenShift requires a pod resource definition (via JSON or YAML file, or oc new-app command, or web console)
+
+# There is no easy way for a pod to discover the IP addresses of other pods (a service layer provides this abstraction when, let's say, a pod restarts with a different internal IP address)
+# The same service exists for all nodes in a cluster
+
+# targetPort has to match containerPort from a pod container definition
+# port attributed is the one exposed by the service (clients connect to the service port and the service forwards packets to taretPort)
+
+# An application typically finds a service IP and port by using env
+# Service host is the service IP, service port is the service TCP
+# Another way is to use the OpenShift internal DNS service (only visible to pods, SVC_NMAE . PROJECT_NAME.svc.cluster.local)
+
+# A pod has to created after a service is created to be discovered using env, otherwise it can only be discovered via DNS queries
+
+# OpenShift proxies connections to a service via the public IP of the compute node host and nodePort IP (which is exposed to external clients by binding to ports on the compute node host, which then proxies to the service IP); oc edit svc
+# Preferred method is to use OpenShift Routes; oc expose command to expose service for external access
+
+

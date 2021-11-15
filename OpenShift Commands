@@ -1,0 +1,4 @@
+oc api-resources / kubectl api-resources        Obtain a list of all resources in a RHOCP cluster
+oc expose           expose service for external access via OpenShift Routes
+oc edit svc         edit service attributes and specify NodePort as value for type and provide port value for nodePort attributes
+oc port-forward     forward a local port to a pod port
