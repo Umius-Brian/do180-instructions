@@ -1,4 +1,16 @@
 oc api-resources / kubectl api-resources        Obtain a list of all resources in a RHOCP cluster
 oc expose           expose service for external access via OpenShift Routes
 oc edit svc         edit service attributes and specify NodePort as value for type and provide port value for nodePort attributes
-oc port-forward     forward a local port to a pod port
+oc port-forward     forward a local port to a single pod port (only works locally, unlike a service which load balances multiple pods for all   network users)
+
+oc new-app (-o json or -o yaml)       creates a skeleton resource definition file
+oc new-app -h                         lists all available options for creating new apps
+oc new-app                            can also create apps from Dockerfile or S2I
+oc create -f <filename>               creates an app from the resource definition file or merged from other files to create a composite app
+oc get (-o json or -o yaml)           export resource definition
+oc get-all                            displays important resources in a cluster
+oc describe <resource_type> <resource_name>           to retrieve additional info not found from get-all
+oc edit                               edit resources from a resource definition (automatically opens a vi buffer)
+oc delete                             removes a resource from a cluster (although pods will automatically restart so understand the OpenShift architecture)
+
+oc exec <container_id>                executes commands from inside a container                               

@@ -1,0 +1,67 @@
+Objectives:
+  - Deploy a MySQL database pod on OpenShift using oc new-app
+
+[student@workstation ~]$ lab openshift-resources start
+
+# Load the env created in the first exercise
+[student@workstation ~]$ source /usr/local/etc/ocp4.config
+
+# Login to the OpenShift cluster
+[student@workstation ~]$ oc login -u ${RHT_OCP4_DEV_USER} -p \
+> ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
+
+# Create a new project that contains your RHOCP dev username for the resources you create during this exercise
+[student@workstation ~]$ oc new-project ${RHT_OCP4_DEV_USER}-mysql-openshift
+
+# Create a new app using the mysql-persistent template using the oc-app command
+# Image requires using -p for env
+# Use --template option with the oc new-app command to specify a template with persistent storage so that OpenShift does not pull an image from the internet
+[student@workstation ~]$ oc new-app \
+> --template=mysql-persistent \
+> -p MYSQL_USER=user1 -p MYSQL_PASSWORD=mypa55 -p MYSQL_DATABASE=testdb \
+> -p MYSQL_ROOT_PASSWORD=r00tpa55 -p VOLUME_CAPACITY=10Gi
+
+# Verify the pod details and service, and that the image deployment was successful
+[student@workstation ~]$ oc status
+
+# List the pods to verify that the MySQL pod is running
+[student@workstation ~]$ oc get pods
+# mysql-1-5vfn4    1/1     Running     0          109s
+
+# Get more pod details
+[student@workstation ~]$ oc describe pod mysql-1-5vfn4
+
+# List the services in this project and verify that the service to access the MySQL pod was created
+[student@workstation ~]$ oc get svc
+
+# Retrieve the details of the MySQL sservice and note that the service type is ClusterIP by default
+[student@workstation ~]$ oc describe service mysql
+
+# List the persistent storage claims in the project
+[student@workstation ~]$ oc get pvc
+
+# Retrieve details of the mysql pvc
+[student@workstation ~]$ oc describe pvc/mysql
+
+# Connect to the MySQL database server and verify that the database was created
+# Configure port forwarding from the workstation machine and the database pod running on OpenShift using port 3306
+# Terminal will hang after command execution
+[student@workstation ~]$ oc port-forward mysql-1-5vfn4 3306:3306
+
+# From the workstation terminal, open another terminal and connect to the MySQL server using the MySQL client
+[student@workstation ~]$ mysql -uuser1 -pmypa55 --protocol tcp -h localhost
+
+# Verify the creation of the database
+mysql> show database;
+
+# Exit
+mysql> exit
+
+# Close the terminal and return to the previous one
+# Finish the port forwarding process by ctrl+C
+
+# Delete the project to remove all resources
+[student@workstation ~]$ oc delete project ${RHT_OCP4_DEV_USER}-mysql-openshift
+
+[student@workstation ~]$ lab openshift-resource finish
+
