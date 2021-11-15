@@ -1,0 +1,60 @@
+Objectives:
+  - Expose a deployed application's service as a route
+
+[student@workstation ~]$ lab openshift-routes start
+
+[student@workstation ~]$ source /usr/local/etc/ocp4.config
+
+# Login to OpenShift cluster
+[student@workstation ~]$ oc login -u ${RHT_OCP4_DEV_USER} -p \
+> ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
+
+# Create a new project that contains RHOCP dev username for the resources created
+[student@workstation ~]$ oc new-project ${RHT_OCP4_DEV_USER}-route
+
+# Create a new PHP application using the quay.io/redhattraining/php-hello-dockerfile image
+[student@workstation ~]$ oc new-app \
+> --docker-image=quay.io/redhattraining/php-hello-dockerfile \
+> --name php-helloworld
+
+# Monitoring the deployment progress
+# -w means working directory
+[student@workstation ~]$ oc get pods -w
+# php-helloworld-74bb86f6cb-zt6wl   1/1     Running   0          5s
+# ^C
+# Alternatively monitor with oc logs -f php-helloworld-74bb86f6cb-zt6wl
+# ^C
+
+# Review the service
+# Note the IP and namespace
+[student@workstation ~]$ oc describe svc/php-helloworld
+
+# Expose the service, which creates a route
+# Use the default name and FQDN for the route
+[student@workstation ~]$ oc expose svc/php-helloworld
+[student@workstation ~]$ oc describe route
+
+# Access the service from an external host to verify the service and route are working
+[student@workstation ~]$ curl \
+> php-helloworld-${RHT_OCP4_DEV_USER}-route.${RHT_OCP4_WILDCARD_DOMAIN}
+# Hello, World! PHP version is 7.2.11 (may be different)
+
+# Replace the route with one named xyz
+# First, delete the current one (although this is optional because you can have multiple routes for the same service, provided they have different names)
+[student@workstation ~]$ oc delete route/php-helloworld
+
+# Create a route for the service with the name ${RHT_OCP4_DEV_USER}-xyz
+[student@workstation ~]$ oc expose svc/php-helloworld \
+> --name={RHT_OCP4_DEV_USER}-xyz
+[student@workstation ~]$ oc describe route
+
+# Make an HTTP request using the FQDN on port 80
+[student@workstation ~]$ curl \
+> ${RHT_OCP4_DEV_USER}-xyz-${RHT_OCP4_DEV_USER}-route.${RHT_OCP4_WILDCARD_DOMAIN}
+# Hello, World! PHP version is 7.2.11
+
+[student@workstation ~]$ lab openshift-routes finish
+
+
+
+
