@@ -12,6 +12,7 @@ Objectives:
 # RHSCL Containerfiles are found in the official repo; CentOS Containerfiles can be found from GitHub; Quay is primarily used for team collaboration offered by CoreOS
 
 # Source-to-Image (S2I) is an OpenShift Container Platform feature
+# Implements a standardized image build process for common technologies from source code, allows devs to focus on code rather than Containerfiles
 # Start a container from a high-quality base (builder) image with the necessary runtime and dependencies such as package managers and compilers, fetch code from Git and send to the container for app binary files building, then save the container as a new container image with runtime and binaries; an advantage over Containerfiles is that it creates smaller container images with fewer layers
 
 # Create a working directory, which contains all the files necessary to build the image, but never use the root directory (/) for security reasons
