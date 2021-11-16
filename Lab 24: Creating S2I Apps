@@ -1,0 +1,60 @@
+Objectives:
+  - Deploy an app using S2I
+
+# Take source code from a Git repo, inject the code into a base container based on the desired framework and language, and produce an image 
+# An S2I app also creates a Deployment and all its dependent resources
+# It is the primary strategy for building apps: user efficiency, patching, speed, ecosystem
+
+# If either the base image or source code gets updated, OpenShift creates a new image and older pods get replaced
+
+# To view available image streams
+oc get is -n openshift
+
+# If an image gets updated in the repo, OpenShift automatically builds a new version of the app code
+
+# Create a S2I app process
+# oc new-app allows for creating apps from local or remote Git repo (also Dockerfiles)
+oc new-app php~http://my.git.server.com/my-app --name=myapp
+# Before the tilde is the image stream 
+# URL after indicates the location of the source code Git repo
+# myapp sets the app's name
+# Can also use -i option or --image-stream instead of tilde
+oc new-app -i php http://services.lab.example.com/myapp --name=myapp
+
+# oc new-app does not create routes automatically, however, using the web console will because it uses a template
+
+# If only source repo is specified (instead of code), oc new-app tries to identify the correct image stream for building the app
+# If no image stream is specified, new-app command search for image stream tags that have support for the detected language or another image stream that matches the name of the detected language
+
+# Create an app using Git repo in the current directory
+oc new-app .
+
+# If using a local Git repo, repo must have a remote origin that points to a URL accessible by the OpenShift instance
+
+# Create an app using remote Git repo and context subdirectory
+oc new-app https://github.com/openshift/sti-ruby.git \
+  --context-dir=2.0/test/puma-test-app
+
+# Create an app using remote Git repo with a specific branch instance
+oc new-app https://github.com/openshift/ruby-hello-world.git#beta4
+
+# Create a JSON resource definition file with output redirection
+# This creates a file with a list of resources
+oc -o json new-app php~http://services.lab.example.com/app \
+> --name=myapp > s21.json
+# First resource produced is the image stream
+# Second resource is the BuildConfig pod, where input parameters and triggers are defined to transform the source code into a runnable image; within BuildConfig, it defines the address to the Git repo, strategy to use S2I, builder image stream, and output image stream (responsible for creating and updating images in OpenShift, and pushing them to internal registry)
+# Third resource is the Deployment pod, with a replica controller and user customizable strategies for deployment changes (every time a new image is available or replication controller template changes, it triggers a deployment), as well as ports (outcome is creation of pods with image deployed to registry; reacts to new image build and creates pods from the image)
+# Last resource is the service
+
+# After app creation, build process starts
+# See list of app builds (retry if it throws an error; still building)
+oc get builds
+
+# See build logs
+oc logs build/myapp-1
+
+# Trigger a new build
+oc get buildconfig
+# myapp          Source    Git       1
+oc start-build myapp
