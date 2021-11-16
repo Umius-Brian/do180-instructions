@@ -48,4 +48,4 @@ chown             change ownership and group ownership of files/directories
 -Z                
 -e                instruct script to exit on error
 -L                follow symbolic links
--s                read same file
+-s                read same file or silent mode

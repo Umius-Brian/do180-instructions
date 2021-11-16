@@ -8,6 +8,7 @@
 -e      --env, set up environment variables
 -q      --quiet, suppress output info when pulling images
 -w      working directory
+-f      force
 
 
 delete

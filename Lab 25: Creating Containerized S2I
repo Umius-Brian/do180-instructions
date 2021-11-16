@@ -1,0 +1,93 @@
+[student@workstation ~]$ lab openshift-s2i start
+
+# Inspect source code and create and push a new branch named s2i to use
+# Enter the local clone of the D0180-apps Git repo and checkout from master to ensure a clean slate
+[student@workstation ~]$ cd ~/D0180-apps
+[student@workstation ~]$ git checkout master
+
+# Create a new branch
+[student@workstation ~]$ git checkout -b s2i
+[student@workstation ~]$ git push -u origin s2i
+
+# Review the PHP source code inside the php-helloworld folder by opening the index.php file
+
+# Load the classroom env configuration
+[student@workstation ~]$ source /usr/local/etc/ocp4.config
+
+# Login
+[student@workstation ~]$ oc login -u ${RHT_OCP4_DEV_USER} -p \
+> ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
+
+# Create a new project that contains RHOCP username for the resources you will create
+[student@workstation ~]$ oc new-project ${RHT_OCP4_DEV_USER}-s2i
+
+# Create a S2I app using the branch created and php-helloworld directory
+# Create the PHP app
+[student@workstation ~]$ oc new-app php:7.3 --name=php-helloworld \
+https://github.com/${RHT_OCP4_GITHUB_USER}/DO180-apps#s2i \
+--context-dir php-helloworld
+
+# Verify that the build process started as it prepares to deploy
+[student@workstation ~]$ oc get pods
+
+# Examine the logs for the build using the build name php-helloworld-1-build
+# During this process, the Git repo is cloned, then the S2I process build a new image called s2i/php-helloworld:latest, then lastly pushes to the OpenShift private registry
+[student@workstation ~]$ oc logs --all-containers \
+-f php-helloworld-1-build
+
+# Review Deployment
+[student@workstation ~]$ oc describe deployment/php-helloworld
+
+# Add a route to test the app
+[student@workstation ~]$ oc expose service php-helloworld \
+--name ${RHT_OCP4_DEV_USER}-helloworld
+
+# Find the URL associated with the route
+[student@workstation ~]$ oc get route -o jsonpath='{..spec.host}{"\n"}'
+# ${RHT_OCP4_DEV_USER}-helloworld-${RHT_OCP4_DEV_USER}-s2i.${RHT_OCP4_WILDCARD_DOMAIN}
+
+# Test the app by sending a GET request to the URL obtained in the previous step
+# -s means silent mode (don't show progress or error messages)
+[student@workstation DO180-apps]$ curl -s \
+> ${RHT_OCP4_DEV_USER}-helloworld-${RHT_OCP4_DEV_USER}-s2i.\
+> ${RHT_OCP4_WILDCARD_DOMAIN}
+# Hello, World! php version is 7.3.20
+
+# Change the app in the Git repo to begin a new S2I build
+# Enter the source directory
+[student@workstation DO180-apps]$ cd ~/DO180-apps/php-helloworld
+
+# Edit the index.php file and save
+<?php
+print "Hello, World! php version is " . PHP_VERSION . "\n";
+print "A change is a coming!\n";
+?>
+
+# Commit the change and push it back to the remote Git repo
+[student@workstation php-helloworld]$ git add .
+[student@workstation php-helloworld]$ git commit -m 'Changed index page contents.'
+[student@workstation php-helloworld]$ git push origin s2i
+
+# Start a new S2I build process and wait for it to build and deploy
+[student@workstation php-helloworld]$ oc start-build php-helloworld
+# build.build.openshift.io/php-helloworld-2 started
+[student@workstation php-helloworld]$ oc logs php-hellworld-2-build -f
+# Push successful (may have to wait and retry because logs take awhile)
+
+# Verify the new version of the app is running
+[student@workstation php-helloworld]$ oc get pods
+
+# Test that the app serves the new content
+[student@workstation php-helloworld]$ curl -s \
+> ${RHT_OCP4_DEV_USER}-helloworld-${RHT_OCP4_DEV_USER}-s2i.\
+> ${RHT_OCP4_WILDCARD_DOMAIN}
+# Hello, World! php version is 7.3.20
+# A change is a coming!
+
+[student@workstation php-helloworld]$ lab openshift-s2i finish
+
+
+
+
+
+
