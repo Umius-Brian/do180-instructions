@@ -1,0 +1,92 @@
+Objectives:
+  - Containerize apps with multiple images using Podman manually
+  - Deploy multi-container apps
+  - Most apps require frontend, backend, db
+
+# Podman uses Container Network Interface (CNI) to create a software-defined network (SDN) for all containers on a host, giving a new container an IP address
+# Rootless containers do not support SDN, so these containers cannot communicate with other containers on the host; can be achieved via port forwarding (allows external access to a container service from a host)
+
+# Create network between Node.js app container and MySQL db container
+# Set up the environment on workstation with the To Do List app source code
+[student@workstation ~]$ lab multicontainer-design start
+
+# Login to Red Hat Container Catalog
+[student@workstation ~]$ podman login registry.redhat.io
+# Enter username and password
+
+# Open the Container file at /home/student/DO180/labs/multicontainer-design/deploy/nodejs/Containerfile in your IDE
+
+# Grep the host IP address
+# ip addr command displays all network instances and their respective IP addresses
+# -br means brief, to display IP only
+# eth0 refers to the primary Ethernet interface
+[student@workstation ~]$ ip -br addr list | grep eth0
+
+# Inspect how the env variables allow the Node API container to communicate with the MySQL container
+# View the db configuration file at /home/student/DO180/labs/multicontainer-design/deploy/nodejs/nodejs-source/models/db.js
+# The model params will have the host IP and port, which allow the db container to be used by Node container
+
+# Build the To Do List child image using the Containerfile at /home/student/DO180/labs/multicontainer-design/deploy/nodejs/build.sh
+[student@workstation nodejs]$ cd ~/DO180/labs/multicontainer-design/deploy/nodejs
+[student@workstation nodejs]$ ./build.sh
+# Rerun the build script if an error occurs due to network instability; the build script lowers restrictions, allowing non-root users to install dependencies
+
+# Verify that the build was successful
+[student@workstation nodejs]$ podman images \
+--format "table "{{.ID}} {{.Repository}} {{.Tag}}"
+
+# Modify the script to create containers with the appropriate ports
+# After inspecting the script, it is known that the db container is first started, then the todoapi container before connecting to the db container, with a wait time of 9 secs so each container can start
+# Edit the run.sh file at /home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked to insert the podman run command to invoke the db container
+# Insert the following
+podman run -d --name mysql -e MYSQL_DATABASE=items -e MYSQL_USER=user1 \
+-e MYSQL_PASSWORD=mypa55 -e MYSQL_ROOT_PASSWORD=r00tpa55 \
+-v $PWD/work/data:/var/lib/mysql/data \
+-p 30306:3306 \
+registry.redhat.io/rhel8/mysql-80:1
+# The $PWD/work/data local folder is mounted as a vollume in the container's file system
+
+# Do the same to invoke the todoapi container in the same run.sh file
+podman run -d --name todoapi -e MYSQL_DATABASE=items -e MYSQL_USER=user1 \
+-e MYSQL_PASSWORD=mypa55 \
+-p 30080:30080 \
+do180/todonodejs
+# After each podman run command, ensure there is a sleep 9 command (if this steps has to be repeated, the work directory and its contents mus t be deleted before rerunning the run.sh script)
+
+# Verify that the run.sh script matches the solution script at /home/student/DO180/solutions/multicontainer-design/deploy/nodejs/networked/run.sh
+# Save the file and exit the editor
+
+# Execute the script to run the mysql and todoapi containers
+[student@workstation nodejs]$ cd \
+/home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked
+[student@workstation networked]$ ./run.sh
+
+# Verify that the containers are run successfully
+[student@workstation networked]$ podman ps \
+--format="{{.ID}} {{.Names}} {{.Image}} {{.Status}}"
+
+# Populate the items database with the Projects table
+[student@workstation networked]$ mysql -uuser1 -h 172.25.250.9 \
+-pmypa55 -P30306 items < \
+/home/student/DO180/labs/multicontainer-design/deploy/nodejs/networked/db.sql
+
+# Explore the env variables exposed in the API container
+[student@workstation networked]$ podman exec -it todoapi env
+
+# Test the app
+# -w "\n" lets the shell prompt appear at the next line rather than merging with the output in the same line
+[student@workstation networked]$ curl -w "\n" \
+http://127.0.0.1:30080/todo/api/items/1
+# {"id":1,"description":"Pick up newspaper","done":false}
+
+# Point browser to http://127.0.0.1:30080/todo/ to see the To Do List app
+
+[student@workstation ~]$ lab multicontainer-design finish
+
+
+
+
+
+
+
+

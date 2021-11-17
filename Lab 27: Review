@@ -35,3 +35,10 @@ php:7.3~https://github.com/redhattraining/DO180-apps \
 
 [student@workstation ~]$ lab openshift-review grade
 [student@workstation ~]$ lab openshift-review finish
+
+# RHOCP stores definitions of each resource instance (RH or K8s) as an object in etcd
+# Resource types include Pod, PVC, PV, SV, Route, Deployment, DeploymentConfig, BC
+# oc new-app creates pod from images in a registry, Dockerfiles, S2I
+# Route connects a public-facing IP and DNS host name to an internal-facing service IP (only way for external access via explicit configuration)
+
+
