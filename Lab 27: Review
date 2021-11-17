@@ -7,3 +7,31 @@
 [student@workstation ~]$ oc login -u ${RHT_OCP4_DEV_USER} -p \
 > ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
 
+# Create a new project with the appropriate name for the resources you will create in the cluster
+[student@workstation ~]$ oc new-project ${RHT_OCP4_DEV_USER}-ocp
+
+# Create a temperature converter named temps 
+# It is written in PHP using the image stream tag php:7.3
+# Source code is in the Git repo https://github.com/redhattraining/DO180-apps/ located in the temps directory
+[student@workstation ~]$ oc new-app \
+php:7.3~https://github.com/redhattraining/DO180-apps \
+--context-dir temps --name temps
+
+# Monitor build progress
+[student@workstation ~]$ oc logs -f bc/temps
+
+# Verify deployment of the app
+[student@workstation ~]$ oc get pods -w
+# Ctrl+C to exit the get pods -w command
+
+# Expose the temps service to create an external route
+[student@workstation ~]$ oc expose svc/temps
+
+# Verify that there is external access
+[student@workstation ~]$ oc get route/temps
+# NAME    HOST/PORT  
+# temps   temps-${RHT_OCP4_DEV_USER}-ocp.${RHT_OCP4_WILDCARD_DOMAIN}
+# Go to the url at http://temps-${RHT_OCP4_DEV_USER}-ocp.${RHT_OCP4_WILDCARD_DOMAIN}
+
+[student@workstation ~]$ lab openshift-review grade
+[student@workstation ~]$ lab openshift-review finish
