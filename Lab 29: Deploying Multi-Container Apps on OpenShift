@@ -1,0 +1,63 @@
+# Env variables allow sharing of information between containers using Podman
+
+# Pods are attached to a K8s namespace (aka OpenShift project)
+# Any K8s service generates env variables for the IP and port for containers in the same namespace
+
+# To deploy an app on OpenShift, first have the To Do List app source code on workstation and download the files to verify the status of the OpenShift cluster
+[student@workstation ~]$ lab multicontainer-application start
+
+# Login to RHOCP
+[student@workstation ~]$ source /usr/local/etc/ocp4.config
+[student@workstation ~]$ oc login -u ${RHT_OCP4_DEV_USER} \
+-p ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
+
+# Create a new project 'application'
+[student@workstation ~]$ oc new-project ${RHT_OCP4_DEV_USER}-application
+
+# Review the YAML file at /home/student/DO180/labs/multicontainer-application/todo-app.yml
+# todoapi pod defines the Node app
+# mysql pod defines the MySQL db
+# todoapi service provides connectivity to the Node pod
+# mysql service provides connectivity to the MySQL pod
+# dbclaim PVC defines the MySQL /var/lib/mysql/data volume
+
+# Create application resources with the yaml file
+[student@workstation ~]$ cd /home/student/DO180/labs/multicontainer-application
+[student@workstation multicontainer-application]$ oc create -f todo-app.yaml
+
+# Review the status of the deployment
+[student@workstation multicontainer-application]$  oc get pods -w
+# Ctrl+C to exit
+
+# Connect to the MySQL db server and populate the data to the item database
+# Configure port forwarding between workstation and the db pod running on port 3306
+[student@workstation multicontainer-application]$ oc port-forward mysql 3306:3306
+
+# Open another terminal and populate the data to the MySQL server using the MySQL client
+[student@workstation ~]$ cd /home/student/DO180/labs/multicontainer-application
+[student@workstation multicontainer-application]$ mysql -uuser1 \
+-h 127.0.0.1 -pmypa55 -P3306 items < db.sql
+# Close the terminal and return to the previous one
+# Ctrl+C to finish the port-forwarding process
+
+# Allow the To Do List app to be accessible through the OpenShift router and be available as a public FQDN by exposing the service
+[student@workstation multicontainer-application]$ oc expose service todoapi
+
+# Find the FQDN and note it
+[student@workstation multicontainer-application]$ oc status | grep -o "http:.*com"
+# http://todoapi-${RHT_OCP4_DEV_USER}-application.${RHT_OCP4_WILDCARD_DOMAIN}
+
+# Test the REST API for the app
+[student@workstation multicontainer-application]$ curl -w "\n" \
+> $(oc status | grep -o "http:.*com")/todo/api/items/1
+
+# Change to the student directory
+[student@workstation multicontainer-application]$ cd ~
+[student@workstation ~]$
+
+# Open Firefox on workstation and point the browser to http://todoapi-${RHT_OCP4_DEV_USER}-application.${RHT_OCP4_WILDCARD_DOMAIN}/todo/ to see the app
+
+[student@workstation ~]$ lab multicontainer-application finish
+
+
+
