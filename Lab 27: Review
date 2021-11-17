@@ -1,3 +1,9 @@
 [student@workstation ~]$ lab openshift-review start
 
-# Load  
+# Load the env variables
+[student@workstation ~]$ source /usr/local/etc/ocp4.config
+
+# Login
+[student@workstation ~]$ oc login -u ${RHT_OCP4_DEV_USER} -p \
+> ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
+
