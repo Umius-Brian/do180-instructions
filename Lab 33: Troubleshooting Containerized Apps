@@ -1,0 +1,46 @@
+# S2I consists of two major steps: build and deployment
+# Build step: compiles source code, downloads library dependencies, packaging the app as an image, pushes image to OpenShift registry, executes and saves a log (the BC resources drive this step)
+# Deployment step: starts a pod and makes the application available for OpenShift (executes only if build step is successful, the Deployment resources drive this step)
+
+# S2I starts each step in a separate pod
+# Build step creates a pod named <app_name>-build-<number>-<string>
+# Upon success, deployment step creates another pod named <app_name>-<string>
+
+# Use the web console to inspect build logs and workload deployments
+
+# To retrieve build logs
+oc logs bc/<app_name>
+
+# To rerun a build, which spawns a new pod
+oc start-build <app_name>
+
+# To retrieve deployment logs
+oc logs deployment/<app_name>
+
+# To view internal env variables that may not be in containerized environments (db credentials, fs access, message queue info), oc logs may indicate missing values or options that must be enabled, incorrect parameters or flags, or env incompatibilities
+
+# OpenShift runs S2I using RHEL as the base image
+# S2I requires a different user other than root to access fs and external resources (it runs containers as a random user)
+# RHEL7 enforces SELinux policies that restrict access to fs resources, network ports, or process
+
+# To relax OpenShift project security, use oc adm policy
+# Enables OpenShift executing container processes with non-root users
+oc adm policy add-scc-to-user anyuid -z default
+
+# Fs used in containers must also be available for the running user (important for volume mounts)
+# To avoid fs permission issues, local folders used for container volume mounts must: have the owner executing proceses be the owner of the folder (use chown command to update folder ownership) and the local folder must satisfy SELinux requirements to be used as a volume (assign container_file_t group to the folder using the semanage fcontext -a -t container_file_t <folder> command, then restorecon -R <folder>)
+
+# Access logs from the application pod to make sure that related containers share the same parameter values
+# Store shared parameters in ConfigMaps is a good practice (ConfigMaps are injected via Deployment into containers as env variables, so inject the same ConfigMaps into related containers)
+
+# If faced with a problem where a pod is not able to allocate a pvc even though the pv indicates that the claim has been released, delete the pvc then the pv, and recreate the pv
+oc delete pv <pv_name>
+oc create-f <pv_resource_file>
+
+# If you push a new image to the registry with the same name and tag as a locally-cached image on teh node where the pod is scheduled to run, remove the image from each node the pod is scheduled on
+podman rmi
+
+# To remove obsolete images and other resources
+oc adm prune
+
+
