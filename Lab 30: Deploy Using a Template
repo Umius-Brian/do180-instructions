@@ -1,0 +1,69 @@
+# A db server and frontend would each require a service and deployment resource
+# They share parameters for the frontend to authenticate the backend
+# A template can explicitly specify parameters or have it generated (like a db password)
+
+# To get preinstalled OpenShift templates
+oc get temmplates -n openshift
+
+# To show YAML template definitions
+oc get template mysql-persistent -n openshift -o yaml
+
+# You can publish a template to the OpenShift cluster so that other developers can build an application from a template
+
+# If you have a template ready, you can publish it
+oc create -f todo-template.yaml
+
+# If the template is not to be created under the current project, using the -n option
+# By using the openshift namespace, it becomes available in the web console under CatalogDeveloper -> Catalog
+oc create -f todo-template.yaml -n openshift
+
+# To set parameters explicitly
+oc process
+
+# To list available parameters from a template, there are two ways
+oc describe template mysql-persistent -n openshift
+oc process --parameters mysql-persistent -n openshift
+
+# Processing a template generates a list of resources to create a new app to standard output in JSON format
+oc process -f <filename>
+
+# To process in YAML format
+oc process -o yaml -f <filename>
+
+# To process a template from the current project or openshift project
+oc process <uploaded-template-name>
+
+# To return a list of resources to a file instead of standard output
+oc process -o yaml -f filename > myapp.yaml
+
+# To override paramaters, use -p option followed by <name>=<value>
+[user@host ~]$ oc process -o yaml -f mysql.yaml \
+> -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi > mysqlProcessed.yaml
+
+# To create the app, use the YAML resource definition file
+oc create -f mysqlProcessed.yaml
+
+# Also able to process the template and create the app without saving a resource definition file by using a UNIX pipe
+[user@host ~]$ oc process -f mysql.yaml -p MYSQL_USER=dev \
+> -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi | oc create -f -
+
+# To use a template in the openshift project, first export the template
+oc get template mysql-persistent -o yaml \
+-n openshift > mysql-persistent-template.yaml
+# Then, identify the template parameters and process the template with the configured attributes based on template parameters
+oc process -f mysql-persistent-template.yaml \
+-p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+-p VOLUME_CAPACITY=10Gi | oc create -f -
+
+# Use double slashes to provide the namespace as part of the template name
+oc process openshift//mysql-persistent \
+> -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi | oc create -f -
+
+# Create an app using oc new-app by passing the template name as the --template option
+oc new-app --template=mysql-persistent \
+> -p MYSQL_USER=dev -p MYSQL_PASSWORD=$P4SSD -p MYSQL_DATABASE=bank \
+> -p VOLUME_CAPACITY=10Gi
+
