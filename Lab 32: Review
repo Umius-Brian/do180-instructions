@@ -87,3 +87,10 @@ http://quote-php-${RHT_OCP4_DEV_USER}-deploy.${RHT_OCP4_WILDCARD_DOMAIN}
 [student@workstation ~]$ lab multicontainer-review grade
 [student@workstation ~]$ lab multicontainer-review finish
 
+# SDN enables communication between containers
+# Containerized apps cannot rely on fixed IPs or host names to find services
+# Podman uses the CNI to create an SDN and attaches all containers on the host to that network
+# K8s and OpenShift create an SDN between all containers in a pod
+# Within the same project, K8s injects a set of variables for each service into all pods
+# OpenShift templates automate creating apps consisting of multiple resources
+# Template parameters allow using the same values when creating multiple resources
