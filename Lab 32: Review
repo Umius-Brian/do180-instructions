@@ -1,0 +1,89 @@
+Objectives:
+  - Create an OpenShift app comprised of multiple containers and access it via a browser
+
+[student@workstation ~]$ lab multicontainer-review start
+[student@workstation ~]$ cd ~/D0180/labs/multicontainer-review
+
+# Login to the OpenShift cluster and create a new project
+# Name the project ${RHT_OCP4_DEV_USER}-deploy
+[student@workstation multicontainer-review]$ source /usr/local/etc/ocp4.config
+[student@workstation multicontainer-review]$ oc login -u ${RHT_OCP4_DEV_USER} \
+-p ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
+
+# Create a new project named deploy and prefixed by your OpenShift username
+[student@workstation multicontainer-review]$ oc new-project \
+> ${RHT_OCP4_DEV_USER}-deploy
+
+# Build the db image located in the images/mysql directory and tag it do180-mysql-80-rhel8
+# Publish it to Quay.io
+
+# Login to Red Hat Container Catalog 
+[student@workstation ~]$ podman login registry.redhat.io
+# Enter username and password
+
+# Build the MySQL image using the provided Containerfile in the images/mysql directory
+[student@workstation multicontainer-review]$ cd images/mysql
+[student@workstation mysql]$ podman build -t do180-mysql-80-rhel8 .
+
+# Push the MySQL image to your Quay.io repo
+# In order for the image to be available for use in a template, tag it quay.io/${RHT_OCP4_QUAY_USER}/do180-mysql-80-rhel8 and push it to quay
+# In order to push, need to login to quay
+[student@workstation mysql]$ podman login quay.io -u ${RHT_OCP4_QUAY_USER}
+[student@workstation mysql]$ podman tag do180-mysql-80-rhel8 \
+quay.io/${RHT_OCP4_QUAY_USER}/do180-mysql-80-rhel8
+[student@workstation mysql]$ podman push \
+quay.io/${RHT_OCP4_QUAY_USER}/do180-mysql-80-rhel8
+
+# Return to the previous directory
+[student@workstation mysql]$ cd ~/DO180/labs/multicontainer-review
+
+# Build the PHP image located in images/quote-php and tag it do180-quote-php and publish it to quay
+# Note: make sure the repos are public in quay.io so OpenShift can get images from it
+
+# Build the PHP image using the Containerfile in images/quote-php directory
+[student@workstation multicontainer-review]$ cd images/quote-php
+[student@workstation quote-php]$ podman build -t do180-quote-php .
+
+# Tag and push the PHP image to quay
+# To make the image available for OpenShift to use in the template, tag it quay.io/${RHT_OCP4_QUAY_USER}/do180-quote-php and push it 
+[student@workstation quote-php]$ podman tag do180-quote-php \
+quay.io/${RHT_OCP4_QUAY_USER}/do180-quote-php
+[student@workstation quote-php]$ podman push \
+quay.io/${RHT_OCP4_QUAY_USER}/do180-quote-php
+
+# Go to the /home/student/DO180/labs/multicontainer-review/ direcotyr and review the provided template quote-php-template.json file
+# Note the pods, services, and pvcs in the template
+[student@workstation quote-php]$ cd ~/DO180/labs/multicontainer-review
+
+# Upload the PHP template so any dev with access to the project can use it
+# First, upload the template to the project
+[student@workstation multicontainer-review]$ oc create -f quote-php-template.json
+
+# Process the uploaded template, create the resources, and verify the status
+
+# Process the template file
+[student@workstation multicontainer-review]$ oc process quote-php-persistent \
+-p RHT_OCP4_QUAY_USER=${RHT_OCP4_QUAY_USER} \
+| oc create -f -
+
+# Verify the deployment status (may take some time for the pods to start)
+[student@workstation multicontainer-review]$ oc get pods -w
+# Ctrl+C to exit
+
+# Expose the service quote-php to allow the PHP Quote app to be accessible through the OpenShift router and reachable from an external network
+[student@workstation multicontainer-review]$ oc expose svc quote-php
+
+# Test the app
+[student@workstation multicontainer-review]$ oc get route
+
+# Change to student directory
+[student@workstation multicontainer-review]$ cd ~
+[student@workstation ~]$
+
+# Curl to test the REST API for the PHP Quote app
+[student@workstation ~]$ curl -w "\n" \
+http://quote-php-${RHT_OCP4_DEV_USER}-deploy.${RHT_OCP4_WILDCARD_DOMAIN}
+
+[student@workstation ~]$ lab multicontainer-review grade
+[student@workstation ~]$ lab multicontainer-review finish
+
