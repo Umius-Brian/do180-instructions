@@ -1,0 +1,12 @@
+# Sometimes, devs and admins need network access into containers that would not be needed by app users
+# Example of port forwarding by mapping the 30306 port of the host to the db server 3306 port running inside the container
+# This command also starts a MySQL server that listens on port 3306
+pod run --name db -p 30306:3306 mysql
+
+# Port forwarding forwards a local port to a pod port, this is different from network access via a service resource
+# Port forwarding only exists in workstation where the oc client runs, whereas service maps a port for all network users
+# Port forwarding forwards connections to a single pod, whereas service load balances connections to multiple pods
+oc port-forward db 30306 3306
+# This command forwards port 30306 on dev machine to 3306 on db pod where a MySQL server (inside a container) accepts network connections
+
+
