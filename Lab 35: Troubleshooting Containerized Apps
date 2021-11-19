@@ -1,12 +1,87 @@
 # Sometimes, devs and admins need network access into containers that would not be needed by app users
+# Such network access is not default container configurations, but port forwarding makes no distinction
 # Example of port forwarding by mapping the 30306 port of the host to the db server 3306 port running inside the container
 # This command also starts a MySQL server that listens on port 3306
 pod run --name db -p 30306:3306 mysql
 
 # Port forwarding forwards a local port to a pod port, this is different from network access via a service resource
-# Port forwarding only exists in workstation where the oc client runs, whereas service maps a port for all network users
-# Port forwarding forwards connections to a single pod, whereas service load balances connections to multiple pods
+# Port forwarding only exists in workstation where the oc client runs, whereas a service maps a port for all network users
+# Port forwarding forwards connections to a single pod, whereas a service load balances connections to multiple pods
 oc port-forward db 30306 3306
 # This command forwards port 30306 on dev machine to 3306 on db pod where a MySQL server (inside a container) accepts network connections
+# Closing the terminal window 
+
+# podman run -p can only be configured when the container has started
+# oc port-forward can be created and destroyed any time after a pod has started
+
+# Mapping with port-forwarding is more secure than creating a NodePort service
+
+# Podman and OpenShift can only see container and pod logs, not application-specific logs
+# All logging output gets sent to stdout
+# Stdout and stderr is saved on disk when a container is created by Podman on a RHOCP cluster; this way, logs can be retrieved after a container is stopped (but not when removed)
+
+# A container is a process tree from the OS perspective
+
+# To retrieve output from a running container
+podman logs <container_name>
+
+# To retrieve output in OpenShift from a container within a pod
+oc logs <pod_name> [-c <container_name>]
+
+# High-level logging and auditing facilities are called events in OpenShift
+oc get events
+
+# These events don't filter and span the whole RHOCP cluster
+# To filter, don't grep and pipe, but rather use describe
+# To retrieve events related to a mysql pod
+oc describe pod mysql
+
+# If you still require more information that cannot be found in logs or stdout, use exec which directs stdout and stdin to the user terminal
+podman exec [options] container command [arguments]
+oc exec [options] pod [-c container] -- command [arguments]
+
+# Use -it to execute a single interactive command or start a shell
+# To start a bash shell for the myhttpdpod pod
+oc exec -it myhttppod /bin/bash
+
+# To access app logs, such as the Apache error log from a container
+podman exec apache-container cat /var/log/httpd/error_log
+
+# podman run -v allows mounting of host binaries folders such as /bin, /sbin, and /lib in order to use some of the troubleshooting commands that are removed from container images in order to save space
+# To access these commands, change the pod resource definition file to define volumeMounts and volumeClaims, and create a hostPath persistent volume
+
+# Start a container and override the image's /bin folder with that of the host's
+podman run -it -v /bin:/bin image
+
+# Transfer files in and out of containers by using volume mounts
+# Mount a local directory to copy data into a container; could be useful when you don't want to rebuild the image
+# Set /conf host directory as the volume to use for the Apache configuration directory in the container
+podman run -v /conf:/etc/httpd/conf -d do180/apache
+
+# Copy files to and from a running container
+# Copy a file into a todoapi container
+podman cp standalone.conf todoapi:/opt/jboss/standalone/conf/standalone.conf
+
+# Copy a file from a container to the host
+podman cp todoapi:/opt/jboss/standalone/conf/standalone.conf .
+
+# cp works with running containers, but volume mounts require changes to the command used to start a container
+
+# Pass in and execute a SQL file inside a MySQL container
+podman exec -i <container> mysql -uroot -proot < /path/on/host/db.sql < db.sql
+
+# Retrieve data and place it in the host machine
+# The mysqldump utility, which creates a backup of the MySQL db from the container and places it on the host
+# This assumes the image provides the mysqldump utility so there is no need to install the MySQL admin tools on the host
+$ podman exec -it <containerName> sh \
+> -c 'exec mysqldump -h"$MYSQL_PORT_3306_TCP_ADDR" \
+> -P"$MYSQL_PORT_3306_TCP_PORT" \
+> -uroot -p"$MYSQL_ENV_MYSQL_ROOT_PASSWORD" items' > db_dump.sql
+
+# oc rsync provides similar functionality to podman cp for containers running under OpenShift pods
+
+
+
+
 
 
