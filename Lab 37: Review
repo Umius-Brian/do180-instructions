@@ -1,0 +1,107 @@
+Objectives:
+  - Identify and solve problems raised during the build and deployment process of a Node app
+
+# Load the environment configuration
+[student@workstation ~]$ source /usr/local/etc/ocp4.config
+
+# Enter a local clone of the DO180-apps repo and checkout to master
+[student@workstation ~]$ cd ~/DO180-apps
+[student@workstation DO180-apps]$ git checkout master
+
+# Create a new branch and push it to save any changes
+[student@workstation DO180-apps]$ git checkout -b troubleshoot-review
+[student@workstation DO180-apps]$ git push -u origin troubleshoot-review
+
+# Login to OpenShift
+[student@workstation DO180-apps]$ oc login -u "${RHT_OCP4_DEV_USER}" \
+-p "${RHT_OCP4_DEV_PASSWORD}" "${RHT_OCP4_MASTER_API}"
+
+# Create a new project named youruser-nodejs-app
+[student@workstation ~]$ oc new-project ${RHT_OCP4_DEV_USER}-nodejs-app
+
+# In your nodejs app, create a new app named nodejs-dev
+# Use the image stream nodejs:12 and source code in nodejs-app directory located in the troubleshoot-review branch created in the earlier step
+# Set npm_config_registry env variable value with http://${RHT_OCP4_NEXUS_SERVER}/repository/npm-proxy
+
+# Run oc new-app to create the node app
+[student@workstation ~]$ oc new-app --name nodejs-dev \
+> https://github.com/${RHT_OCP4_GITHUB_USER}/DO180-apps#troubleshoot-review \
+> -i nodejs:12 --context-dir=nodejs-app --build-env \
+> npm_config_registry=http://${RHT_OCP4_NEXUS_SERVER}/repository/npm-proxy
+
+# Monitor the build process with oc log -f bc/nodejs-dev
+[student@workstation ~]$ oc logs -f bc/nodejs-dev
+# The build process failed and no app is running
+# There is no express compatible version
+
+# Use oc pods to confirm the app is not deployed
+[student@workstation ~]$ oc get pods
+
+# Update the express version in package.json with a value of 4.x
+# Commit and push
+# sed stands for stream editor and allows functions suh as searching, find and replace, insertion or deletion
+[student@workstation DO180-apps]$ cd nodejs-app
+[student@workstation nodejs-app]$ sed -i s/4.20/4.x/ package.json
+[student@workstation nodejs-app]$ cat package.json
+[student@workstation nodejs-app]$ git commit -am "Fixed Express release"
+[student@workstation nodejs-app]$ git push
+
+# Rebuild the app and verify it builds without errors
+[student@workstation nodejs-app]$ oc start-build bc/nodejs-dev
+
+# Monitor the build process logs
+[student@workstation nodejs-app]$ oc logs -f bc/nodejs-dev
+# Build succeeds if an image is pushed to the internal OpenShift registry
+
+# Check the status of the pod
+[student@workstation nodejs-app]$ oc get pods
+# There will be an error
+
+# Follow the logs for the app deployment
+[student@workstation nodejs-app]$ oc logs -f deployment/nodejs-dev
+# Cannot find module 'http-error'
+# By looking at the packages file, it shows that the module name is html-errors, not http-error
+
+# Correct the spelling in the first line of the server.js file from http-error to html-errors
+[student@workstation nodejs-app]$ sed -i s/http-error/html-errors/ server.js
+[student@workstation nodejs-app]$ cat server.js
+[student@workstation nodejs-app]$ git commit -am "Fixed module typo"
+[student@workstation nodejs-app]$ git push
+
+# Rebuild
+[student@workstation nodejs-app]$ oc start-build bc/nodejs-dev
+
+# Monitor the build process logs
+[student@workstation nodejs-app]$ oc logs -f bc/nodejs-dev
+
+# Monitor deployment of pods for the nodejs-dev app
+[student@workstation nodejs-app]$ oc get pods -w
+
+# Create a route and test external access
+[student@workstation nodejs-app]$ oc expose svc nodejs-dev
+[student@workstation nodejs-app]$ oc get route
+[student@workstation nodejs-app]$ curl \
+> nodejs-dev-${RHT_OCP4_DEV_USER}-nodejs-app.${RHT_OCP4_WILDCARD_DOMAIN}
+# There will be an error message
+
+# Review the logs for the nodejs-dev deployment
+[student@workstation nodejs-app]$ oc logs -f deployment/nodejs-dev
+# A process in Node contains a reference to an env object, not an environment object
+
+# Replace process.environment with process.env in server.js 
+# Commit and push
+# Rebuild and verify when you access the app externally
+[student@workstation nodejs-app]$ sed -i \
+> s/process.environment/process.env/ server.js
+[student@workstation nodejs-app]$ cat server.js
+[student@workstation nodejs-app]$ git commit -am "Fixed process.env"
+[student@workstation nodejs-app]$ git push
+[student@workstation nodejs-app]$ oc start-build bc/nodejs-dev
+[student@workstation nodejs-app]$ oc logs -f bc/nodejs-dev
+[student@workstation nodejs-app]$ oc get pods
+[student@workstation nodejs-app]$ curl \
+> nodejs-dev-${RHT_OCP4_DEV_USER}-nodejs-app.${RHT_OCP4_WILDCARD_DOMAIN}
+# Hello World from pod: nodejs-dev-3-wlpps
+
+[student@workstation nodejs-app]$ lab troubleshoot-review grade
+[student@workstation nodejs-app]$ lab troubleshoot-review finish
