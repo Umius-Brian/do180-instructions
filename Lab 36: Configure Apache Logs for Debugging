@@ -1,0 +1,56 @@
+Objectives:
+  - Configure Apache httpd container to send logs to stdout
+  - Review Podman logs and events
+
+[student@workstation ~]$ lab troubleshoot-container start
+
+# Configure an Apache web server to send log messages to stdout and update the default log level
+# Default log level for Apache httpd image is warn
+# Change default log level to debug and redirect log messages to stdout by overriding the default httpd.conf
+# To do so, create a custom image from workstation VM
+# Review the custom httpd.conf file at /home/student/DO180/labs/troubleshoot-container/conf/httpd.conf
+
+# Observe the ErrorLog directive in the file
+# This sends the httpd error log messages to stdout
+ErrorLog "/dev/stdout"
+
+# Change default log level to debug
+LogLevl debug
+
+# Redirect the httpd access log messages to stdout
+CustomLog "/dev/stdout" common
+
+# Build a custom container to save an updated configuration file to the container
+# First, build a new image
+[student@workstation ~]$ cd ~/DO180/labs/troubleshoot-container
+[student@workstation troubleshoot-container]$ podman build \
+>  -t troubleshoot-container .
+[student@workstation troubleshoot-container]$ cd ~
+
+# Verify that the image was created
+[student@workstation ~]$ podman images
+# The new image must be in local storage
+
+# Create a new httpd container from the custom image
+[student@workstation ~]$ podman run \
+--name troubleshoot-container -d \
+-p 10080:80 troubleshoot-container
+
+# Review the container log messages and events
+# View the container debug log messages
+[student@workstation ~]$ podman logs -f troubleshoot-container
+
+# Open a new terminal to access the web server home page 
+[student@workstation ~]$ curl http://127.0.0.1:10080
+# Hello from the httpd-parent container!
+
+# Use podman logs to see the new entries in the log
+# 10.0.2.2 - - [31/Mar/2021:14:06:03 +0000] "GET / HTTP/1.1" 200 39
+# Ctrl+C
+
+[student@workstation ~]$ lab troubleshoot-container finish
+
+
+
+
+
