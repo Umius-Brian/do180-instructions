@@ -105,3 +105,9 @@ Objectives:
 
 [student@workstation nodejs-app]$ lab troubleshoot-review grade
 [student@workstation nodejs-app]$ lab troubleshoot-review finish
+
+# Container apps should print log data to stdout, instead of a file, to enable easy access to logs
+# Use podman logs to reviews container logs deployed locally with Podman
+# Use oc logs to access logs for BC and Deployment objects, as well as individual pods within OpenShift
+# -f option allows monitoring log output in real-time for both podman logs and oc logs
+# oc port-forward to connect directly to a port on an app pod (leverage this on non-prod pods because interactions can alter the behavior of pods)
