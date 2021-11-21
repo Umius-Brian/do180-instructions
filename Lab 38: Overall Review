@@ -1,0 +1,105 @@
+Objectives:
+  - Containerize a Nexus server, build and test with Podman, and deploy to OpenShift
+
+# Setup script
+[student@workstation ~]$ lab comprehensive-review start
+
+# Labs are in /home/student/DO180/labs/comprehensive-review directory
+# Solutions are in /home/student/DO180/solutions/comprehensive-review
+
+# Execute a script to retrieve the Nexus server files
+[student@workstation ~]$ cd /home/student/DO180/labs/comprehensive-review/image
+[student@workstation image]$ ./get-nexus-bundle.sh
+# Nexus bundle download successful
+
+# Write a Containerfile that containerizes the Nexus server
+# Go to /home/student/DO180/labs/comprehensive-review image directory and create the Containerfile
+
+FROM ubi8/ubi:8.3
+
+MAINTAINER username <username@example.com>
+
+ARG NEXUS_VERSION=2.14.3-02
+ENV NEXUS_HOME=/opt/nexus
+
+RUN yum install -y --setopt=tsflags=nodocs java-1.8.0-openjdk-devel \
+    && yum clean all -y
+
+RUN groupadd -r nexus -f -g 1001 \
+    && useradd -u 1001 -r -g nexus -m -d ${NEXUS_HOME} -s /sbin/nologin \
+               -c "Nexus User" nexus \
+    && chown -R nexus:nexus ${NEXUS_HOME} \
+    && chmod -R 755 ${NEXUS_HOME}
+
+USER nexus
+
+ADD nexus-${NEXUS_VERSION}-bundle.tar.gz ${NEXUS_HOME}
+ADD nexus-start.sh ${NEXUS_HOME}/
+
+RUN ln -s ${NEXUS_HOME}/nexus-${NEXUS_VERSION} ${NEXUS_HOME}/nexus2
+
+WORKDIR ${NEXUS_HOME}
+
+VOLUME ["/opt/nexus/sonatype-work"]
+
+CMD ["sh", "nexus-start.sh"]
+
+# Build the image with the name nexus
+[student@workstation image]$ podman build --layers=false -t nexus .
+
+# Build and test the image using Podman with a volume mount
+
+# Execute the run-persistent.sh script (replace container name as shown in the output of podman ps)
+[student@workstation images]$ cd /home/student/DO180/labs/comprehensive-review
+[student@workstation comprehensive-review]$ cd deploy/local
+[student@workstation local]$ ./run-persistent.sh
+
+# Verify that the server is up and running
+[student@workstation local]$ podman ps \
+> --format="{{.ID}} {{.Names}} {{.Image}}"
+# 81f480f21d47   inspiring_poincare   localhost/nexus:latest
+[student@workstation local]$ podman logs inspiring_poincare | grep JettyServer
+
+# Test the container
+[student@workstation local]$ curl -v 127.0.0.1:18081/nexus/ 2>&1 \
+> | grep -E 'HTTP|<title>'
+> GET /nexus/ HTTP/1.1
+< HTTP/1.1 200 OK
+
+# Remove the test container
+[student@workstation local]$ podman rm -f inspiring_poincare
+
+# Deploy the image to the OpenShift cluster
+
+# Login to quay
+[student@workstation local]$ podman login -u ${RHT_OCP4_QUAY_USER} quay.io
+
+# Publish the Nexus server image to quay
+[student@workstation local]$ podman push localhost/nexus:latest \
+> quay.io/${RHT_OCP4_QUAY_USER}/nexus:latest
+# Pushing images to quay repos are private repos by default
+
+# Create the OpenShift project
+[student@workstation local]$ cd ~/DO180/labs/comprehensive-review/deploy/openshift
+[student@workstation openshift]$ oc login -u ${RHT_OCP4_DEV_USER} \
+>  -p ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
+[student@workstation openshift]$ oc new-project ${RHT_OCP4_DEV_USER}-review
+
+# Replace RHT_OCP4_QUAY_USEr in the resources file with Quay usernmae and create the K8s resources
+[student@workstation openshift]$ export RHT_OCP4_QUAY_USER
+[student@workstation openshift]$ envsubst < resources/nexus-deployment.yaml \
+> | oc create -f -
+[student@workstation openshift]$ oc get pods
+
+# Expose the service by creating a route
+[student@workstation openshift]$ oc expose svc/nexus
+[student@workstation openshift]$ oc get route -o yaml
+# ost: nexus-${RHT_OCP4_DEV_USER}-review.${RHT_OCP4_WILDCARD_DOMAIN}
+
+# Connect to the Nexus web app
+http://nexus-${RHT_OCP4_DEV_USER}-review.${RHT_OCP4_WILDCARD_DOMAIN}/nexus/
+
+[student@workstation ~]$ lab comprehensive-review grade
+[student@workstation ~]$ lab comprehensive-review finish
+
+
