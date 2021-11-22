@@ -73,3 +73,5 @@ Objectives:
 [user@host ~]$ podman push [OPTIONS] IMAGE [DESTINATION]
 # To push the bitnami/nginx image to Quay.io registry
 [user@host ~]$ podman push quay.io/bitnami/nginx
+
+# The current working directory is by default the path for the Containerfile, but you can specify a different directory using the -f flag
