@@ -1,0 +1,7 @@
+# Install all your environment tools including Podman and runtime
+sudo yum module install container-tools
+
+# podman images is a non-root command
+# podman ps just shows running containers, whereas podman ps -a shows all containers (running and used to run)
+# system containers starts a service and then waits until you tell it to stop
+
