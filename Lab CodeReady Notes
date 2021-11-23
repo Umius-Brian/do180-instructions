@@ -8,4 +8,13 @@ sudo yum module install container-tools
 
 # ConfigMaps allow a better way to run with env variables
 
+# man <command>
+# man /examples
 
+# To find operating system
+cat /etc/os-release 
+# To find kernel
+uname -r
+
+
+eval $(crc podman-env)
