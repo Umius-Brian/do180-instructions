@@ -4,4 +4,8 @@ sudo yum module install container-tools
 # podman images is a non-root command
 # podman ps just shows running containers, whereas podman ps -a shows all containers (running and used to run)
 # system containers starts a service and then waits until you tell it to stop
+# podman logs containername to analyze if a container needs additional env variables
+
+# ConfigMaps allow a better way to run with env variables
+
 
