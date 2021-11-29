@@ -45,7 +45,7 @@ podman port -l
 # Podman recognizes a container either with the container name or generated container id. Use --name option to set the container name when running the container with Podman (must be unique)
 # If there is no --name option, Podman will automatically create a random one
 
-# If the image requires user interaction with the console, Pod can redirect container input and output streams to the conosle. To enable interaction with console, use -t and -i flags (or -it)
+# If the image requires user interaction with the console, Pod can redirect container input and output streams to the console. To enable interaction with console, use -t and -i flags (or -it)
 -t means pseudo-terminal
 -i means interactive
 -d means container runs detached in the background

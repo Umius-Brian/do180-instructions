@@ -24,8 +24,8 @@ commit
 export
 start
 restart
-kill
-stop
+kill (running containers)
+stop (running containers)
 rmi
 rm
 rm -f
