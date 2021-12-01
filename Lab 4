@@ -4,6 +4,7 @@ Objectives:
 [student@workstation ~]$ lab container-rootless start
 
 # Run container as root user and check UID of a running process within it
+# --rm is cleanup, meaning file system is removed when container exits (by default, all containers persist a file system but this can quickly accumulate)
 [student@workstation ~]$ sudo podman run --rm --name asroot -ti \
 > registry.access.redhat.com/ubi8:latest /bin/bash
 

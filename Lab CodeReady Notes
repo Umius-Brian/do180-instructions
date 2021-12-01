@@ -1,11 +1,14 @@
+eval $(crc oc-env)
+eval $(crc podman-env)
+
 # Install all your environment tools including Podman and runtime
 sudo yum module install container-tools
 
 # podman images is a non-root command
 # podman ps just shows running containers, whereas podman ps -a shows all containers (running and used to run)
-# system containers starts a service and then waits until you tell it to stop
+# system containers starts a service and then waits until you tell it to stop, unless all other containers
 # podman logs containername to analyze if a container needs additional env variables
-
+# all containers run off of the base OS Linux kernel
 # ConfigMaps allow a better way to run with env variables
 
 # man <command>
@@ -18,10 +21,8 @@ cat /etc/os-release
 # To find kernel
 uname -r
 
-eval $(crc oc-env)
-eval $(crc podman-env)
-
 # Use podman inspect frequently to learn more about images
+podman inspect ubi8 | less
 
 # To list more details about images
 podman search --no-trunc ubi8
@@ -38,3 +39,10 @@ ls -l (to show image in local files)
 
 # Rootless containers do not get an IP address, cannot bind to privileged ports, and have limited access to fs
 # Default in OpenShift
+
+# Inspect latest with formatting
+podman inspect -l -f "{{.Images}}"
+
+# To view containers from host OS pov
+ps fax | less and look for processes that are started by runc
+
