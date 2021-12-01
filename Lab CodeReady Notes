@@ -23,3 +23,18 @@ eval $(crc podman-env)
 
 # Use podman inspect frequently to learn more about images
 
+# To list more details about images
+podman search --no-trunc ubi8
+
+# To list details about an image before pulling it
+skopeo inspect docker://registry.access.redhat.com/ubi8/ubi-minimal
+
+# To list details on disk about an image 
+podman image inspect <image_id>
+
+# Make a backup copy
+podman save -o myimage.tar <image_id>
+ls -l (to show image in local files)
+
+# Rootless containers do not get an IP address, cannot bind to privileged ports, and have limited access to fs
+# Default in OpenShift
