@@ -46,3 +46,7 @@ podman inspect -l -f "{{.Images}}"
 # To view containers from host OS pov
 ps fax | less and look for processes that are started by runc
 
+# /etc/containers/registries.conf file is used to access registries
+# [registries.search] for default registries
+# [registries.insecure] for private registries not protected with TLS keys
+
