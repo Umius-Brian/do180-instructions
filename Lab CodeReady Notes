@@ -50,3 +50,24 @@ ps fax | less and look for processes that are started by runc
 # [registries.search] for default registries
 # [registries.insecure] for private registries not protected with TLS keys
 
+# podman login -u {redhat email} registry.access.redhat.com to login to Red Hat registry at registry.access.redhat.com
+# podman login registry.redhat.io
+# Then enter obfuscated password
+
+# podman save to save an image to a .tar file
+podman save quay.io/bitnami/nginx:latest -o mysql.tar
+# To load an image from a tar file
+podman load -i mysql.tar
+
+# Another example of saving to a .tar file
+# -l means long list
+podman image save docker.io/nginx -o /tmp/nginx.tar
+ls -l /tmp/nginx.tar
+
+# To retrieve info about specific image version
+# Need to install skopeo first
+skopeo inspect
+
+# Podman inspect only works after pulling
+
+
