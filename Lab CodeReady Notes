@@ -70,4 +70,23 @@ skopeo inspect
 
 # Podman inspect only works after pulling
 
+# Run podman diff to get a list of differences between the running container and original image
+# Then run podman commit to apply modifications to images
+# Dockerfile is preferred though
+podman commit <old_image> <new_image_name>
 
+# Lab
+# Ensure you are logged in to all registries required to use podman
+podman login registry.redhat.io
+# Search for info on ubi8
+podman search
+# Download the image you found and make a backup copy
+podman save -o <image.tar> <image_id>
+ls -l
+# Investigate image contents
+podman image inspect
+# Remove image from local image list
+podman rmi
+podman image ls
+# Restore backup you previously created
+podman load -i <image.tar>
