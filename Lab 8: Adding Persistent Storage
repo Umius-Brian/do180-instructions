@@ -3,7 +3,7 @@ Objectives:
   - Configure host directories to use as container volumes
   - Mount a volume inside a container
 
-# Running container gets a container storage layer over the base container image
+# Running container gets an emphemeral read/write container storage layer over the base container image
 # At first, this is the only read/write volatile layer and is used to create emphemeral (working, temporary, and log) files; these files have no effect on the application, even if they are lost
 # Container storage layer gets uniquely created every time a container is created, allowing for resource isolation
 # However, to extend data beyond the container life, we need persistent storage

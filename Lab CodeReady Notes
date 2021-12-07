@@ -83,10 +83,21 @@ podman search
 # Download the image you found and make a backup copy
 podman save -o <image.tar> <image_id>
 ls -l
-# Investigate image contents
+# Investigate image contents on local system
 podman image inspect
+# Investigate container contents
+podman inspect
 # Remove image from local image list
 podman rmi
 podman image ls
 # Restore backup you previously created
 podman load -i <image.tar>
+
+# Run a non-default container to troubleshoot it
+podman run -it myimage sh
+
+# Persistent storage: Lab 8
+# Use podman inspect to find UID of the container in order for the host directory to be writable by the container main process
+podman inspect image (then look for User)
+# Then set the UID found in the container
+sudo chown -R <id>:<id>/hostdir
