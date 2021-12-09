@@ -98,6 +98,11 @@ podman run -it myimage sh
 
 # Persistent storage: Lab 8
 # Use podman inspect to find UID of the container in order for the host directory to be writable by the container main process
-podman inspect image (then look for User)
+podman inspect image (then look for UID in the user namespace, not always accessible on the host)
 # Then set the UID found in the container
 sudo chown -R <id>:<id>/hostdir
+# Then set SELinux
+sudo semanage fcontext -a -t container_file_t "/hostdir(/.*)?"
+sudo restorecon -Rv /hostdir
+# Mount storage
+podman run -v /hostdir:/dir-in-container myimage
