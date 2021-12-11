@@ -22,7 +22,10 @@ Objectives:
 
 # Access container sandbox by running the following, which starts a Bash shell, running as the mysql user inside the MySQL container
 [student@workstation ~]$ podman exec -it mysql-basic /bin/bash
-bash-4.2$
+
+# To verify
+bash-4.2$ hostname
+bash-4.2$ whoami
 
 # Add data to database by connecting to MySQL as the database administrator user (root)
 bash-4.2$ mysql -uroot
