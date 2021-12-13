@@ -17,6 +17,7 @@ Objectives:
 [root@f95d16108991 /]# sleep 1000
 
 # On a new terminal, run ps to search for the process
+# ps -ef is used to find the PID of the process
 [student@workstation ~]$ sudo ps -ef | grep "sleep 1000"
 # root        3137    3117  0 10:18 pts/0    00:00:00 /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 1000
 
@@ -39,7 +40,9 @@ Objectives:
 # Start a sleep process within the container
 [root@d289dccd5285 /]# sleep 2000
 
-# On a new termianl, run ps to search for the process
+# On a new terminal, run ps to search for the process
+# grep -v grep takes input line by line and outputs only the lines that grep does not appear in
+# Without -v, only lines where grep appears would output
 [student@workstation ~]$ sudo ps -ef | grep "sleep 2000" | grep -v grep
 # student     3345    3325  0 10:24 pts/0    00:00:00 /usr/bin/coreutils --coreutils-prog-shebang=sleep /usr/bin/sleep 2000
 
