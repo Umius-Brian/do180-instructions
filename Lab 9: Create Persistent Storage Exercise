@@ -7,6 +7,10 @@
 # mkdir: created directory /home/student/local
 # mkdir: created directory /home/student/local/mysql
 
+[student@workstation ~]$ ls -Zd /home/student/local/mysql
+# unconfined_u:object_r:user_home_t:s0 /home/student/local/mysql
+# user home type
+
 # Apply SELinux context for host directory and its contents
 [student@workstation ~]$ sudo semanage fcontext -a \
 > -t container_file_t '/home/student/local/mysql(/.*)?'
@@ -15,10 +19,13 @@
 [student@workstation ~]$ sudo restorecon -R /home/student/local/mysql
 
 # Verify that SELinux context type for the host directory is container_file_t
+# -dZ shows SELinux context for the directory
 [student@workstation ~]$ ls -ldZ /home/student/local/mysql
 # drwxrwxr-x. 2 student student unconfined_u:object_r:container_file_t:s0 6 May 26 14:33 /home/student/local/mysql
 
-# Change the owner of the /home/student/local/mysql directory to the mysql user and mysql group:
+# Change the owner of the /home/student/local/mysql directory to the mysql user and mysql group
+# user number:group number
+# unshare launches a process in a new namespace
 [student@workstation ~]$ podman unshare chown 27:27 /home/student/local/mysql
 
 # In order for the user running processes in the container to write files to the directory, gain permission using UID of the container. Podman unshare command provides a session to execute commands within the same user namespace as the process running inside the container
@@ -45,7 +52,7 @@
 [student@workstation ~]$ ls -ld /home/student/local/mysql/items
 # drwxr-x---. 2 100026 100026 6 Apr  8 07:31 /home/student/local/mysql/items
 
-# To check UID of container
+# Alternatively, to also check UID from the container container
 [student@workstation ~]$ podman unshare ls -ld /home/student/local/mysql/items
 # drwxr-x---. 2 27 27 6 Apr  8 07:31 /home/student/local/mysql/items
 

@@ -25,6 +25,9 @@ podman ps -a
 # Set up host directory
 [user@host ~]$ mkdir /home/student/dbfiles
 
+# Find UID
+echo $UID
+
 # To allow the user running processes in the container to have write access to directory, you should find the UID of the container and use podman unshare to execute commands within the same user namespace as the running process inside the container
 # For MySQL service provided by Red Hat, the UID is 27
 # Unshare command allows you to run a program with namespaces unshared from its parent, basically lets you run whatever program you pass it in a new set of namespaces
@@ -33,6 +36,7 @@ podman ps -a
 # Apply container_file_t context to directory and all subdirectories to allow container access to the host directory
 [user@host ~]$ sudo semanage fcontext -a -t container_file_t '/home/student/dbfiles(/.*)?'
 # (/.*)? means folder dbfiles and possible subdirectories/files
+# -a for adding a rule, -t for defining type of rule
 # semanage is a SELinux management tool to configure elements of SELinux policy without having to modify or recompile policy sources
 # semanage fcontext changes SELinux context of files
 

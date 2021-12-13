@@ -40,6 +40,7 @@ Objective:
 > /home/student/DO180/labs/manage-lifecycle/db.sql mysql:/
 
 # Populate items database with Project table
+# Not using -it because we're using -c to populate
 [student@workstation ~]$ podman exec mysql /bin/bash \
 > -c 'mysql -uuser1 -pmypa55 items < /db.sql'
 
