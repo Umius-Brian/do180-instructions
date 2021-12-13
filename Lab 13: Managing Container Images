@@ -90,3 +90,5 @@ podman search --list-tags httpd
 
 [user@host ~]$ podman pull registry.redhat.io/rhel8/mysql-80:1
 [user@host ~]$ podman run registry.redhat.io/rhel8/mysql-80:1
+
+# There is no podman command to search for tags

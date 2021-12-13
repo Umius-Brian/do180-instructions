@@ -16,6 +16,9 @@ Objectives:
 # Change owner of the directory to mysql user and mysql group for the container image; change ownership from root:root to 27:27
 [student@workstation ~]$ podman unshare chown -Rv 27:27 /home/student/local/mysql
 
+# Verify 
+ls -Zd local/mysql/
+
 # Deploy a MySQL container instance with the given name, run as daemon option, volume, container image, port forward address, environment variables
 [student@workstation ~]$ podman login registry.redhat.io
 [student@workstation ~]$ podman run --name mysql-1 -d \

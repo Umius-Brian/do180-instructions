@@ -43,6 +43,7 @@ Objectives:
 [user@host ~]$ podman ps
 
 # To identify which image files were changed while setting the container to its desired state, use diff which only requires name or ID
+# Does not read mounted volumes
 [user@host ~]$ podman diff mysql-basic
 
 # Files that are mounted to a running container are not considered part of a container file system
@@ -61,7 +62,7 @@ Objectives:
 # mysql-custom option corresponds to the image name in the registry
 
 # To use a different tag name
-[user@host ~]$ podman tag mysql-custom  devops/mysql:snapshot
+[user@host ~]$ podman tag mysql-custom devops/mysql:snapshot
 
 # An image can have multiple tags, to remove them:
 # To remove an image referred to by multiple tags, first remove each tag individually
