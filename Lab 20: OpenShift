@@ -10,11 +10,11 @@ oc login <clusterURL>
 # The same service exists for all nodes in a cluster
 
 # targetPort has to match containerPort from a pod container definition
-# port attributed is the one exposed by the service (clients connect to the service port and the service forwards packets to taretPort)
+# port attributed is the one exposed by the service (clients connect to the service port and the service forwards packets to targetPort)
 
 # An application typically finds a service IP and port by using env
 # Service host is the service IP, service port is the service TCP
-# Another way is to use the OpenShift internal DNS service (only visible to pods, SVC_NMAE . PROJECT_NAME.svc.cluster.local)
+# Another way is to use the OpenShift internal DNS service (only visible to pods, SVC_NAME . PROJECT_NAME.svc.cluster.local)
 
 # A pod has to created after a service is created to be discovered using env, otherwise it can only be discovered via DNS queries
 
