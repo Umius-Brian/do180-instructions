@@ -23,8 +23,9 @@ COPY ./src/ /var/www/html/
 CMD ["httpd", "-D", "FOREGROUND"]
 
 # Build the custom image with the name do180/custom-apache
+# layers false keeps from caching intermediate layers
 [student@workstation dockerfile-review]$ podman build --layers=false \
-> -t do180/custom-apache
+> -t do180/custom-apache .
 
 [student@workstation dockerfile-review]$ podman images
 

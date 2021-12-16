@@ -27,7 +27,7 @@ root@b9d5739af239:/# exit
 > official-nginx do180/mynginx:v1.0-SNAPSHOT
 [student@workstation ~]$ podman images
 
-# Start a new container with the updated image with the given
+# Start a new container with the updated image with the given name
 [student@workstation ~]$ podman run --name official-nginx-dev \
 > -d -p 8080:80 do180/nginx:v1.0-SNAPSHOT
 
@@ -42,7 +42,7 @@ root@cfa21f02a77d:/# exit
 
 # Stop the container and commit changes to a new image with the name do180/mynginx and tag v1.0
 [student@workstation ~]$ podman stop official-nginx-dev
-[student@workstation ~]$ podman commit --name 'Your Name' \
+[student@workstation ~]$ podman commit -a 'Your Name' \
 > official-nginx-dev do180/mynginx:v1.0
 [student@workstation ~]$ podman images
 
