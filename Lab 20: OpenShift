@@ -22,7 +22,9 @@ oc login <clusterURL>
 # Preferred method is to use OpenShift Routes; oc expose command to expose service for external access
 
 # oc port-forward is good for single port and more secure than NodePort for exposing service to direct connections
+# Good for testing things out
 # Forwards port 3306 from a dev machine to port 3306 on the db pod where a MySQL server accepts network connections from inside a container
+# Not public or a route, just a secret tunnel for your personal workstation
 [user@host ~]$ oc port-forward mysql-openshift-1-glqrp 3306:3306
 
 # Create an app based on a mysql image from Docker Hub with the label set to db=mysql
@@ -74,3 +76,7 @@ oc get svc,deployments -l app=nexus
 # To obtain a list of all the resources available in a RHOCP cluster and their abbreviations, use the oc api-resources or kubectl api-resources commands.
 
 # oc get all to retrieve everything from current project/namespace
+
+# Always give the type and the name when using oc
+# Resource type, resource name
+
