@@ -19,6 +19,7 @@ Objectives:
 
 # Monitoring the deployment progress
 # -w means working directory
+[student@workstation ~]$ oc get all
 [student@workstation ~]$ oc get pods -w
 # php-helloworld-74bb86f6cb-zt6wl   1/1     Running   0          5s
 # ^C

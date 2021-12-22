@@ -53,7 +53,7 @@ oc new-app \
 # See YAML definition for a PersistentVolume (use -o yaml)
 oc get pv pv0001 -o yaml
 
-# To add more PersistentVolume objects to a cluster (pv1001.yaml must be a resource definition file)
+# To add more PersistentVolume objects to a cluster from a file (pv1001.yaml must be a resource definition file)
 oc create -f pv1001.yaml
 
 # To request a dedicated storage resource from the cluster pool, create a pvc yaml file, which defines capacity and throughput
@@ -79,4 +79,7 @@ oc get svc,deployments -l app=nexus
 
 # Always give the type and the name when using oc
 # Resource type, resource name
+
+# If more than one container in a pod
+oc exec {pod_name} -c {container_name}
 

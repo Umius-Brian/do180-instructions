@@ -20,6 +20,7 @@ Objectives:
 > --template=mysql-persistent \
 > -p MYSQL_USER=user1 -p MYSQL_PASSWORD=mypa55 -p MYSQL_DATABASE=testdb \
 > -p MYSQL_ROOT_PASSWORD=r00tpa55 -p VOLUME_CAPACITY=10Gi
+[student@workstation ~]$ oc get all
 
 # Verify the pod details and service, and that the image deployment was successful
 [student@workstation ~]$ oc status
@@ -28,8 +29,13 @@ Objectives:
 [student@workstation ~]$ oc get pods
 # mysql-1-5vfn4    1/1     Running     0          109s
 
+# Can also add -w for watch to see continuous status update
+oc get pods -w
+
 # Get more pod details
 [student@workstation ~]$ oc describe pod mysql-1-5vfn4
+
+# Can also run through less to get less details: | less
 
 # List the services in this project and verify that the service to access the MySQL pod was created
 [student@workstation ~]$ oc get svc
@@ -48,11 +54,11 @@ Objectives:
 # Terminal will hang after command execution
 [student@workstation ~]$ oc port-forward mysql-1-5vfn4 3306:3306
 
-# From the workstation terminal, open another terminal and connect to the MySQL server using the MySQL client
+# From the workstation terminal, while the tunnel is open, open another terminal and connect to the MySQL server using the MySQL client
 [student@workstation ~]$ mysql -uuser1 -pmypa55 --protocol tcp -h localhost
 
 # Verify the creation of the database
-mysql> show database;
+mysql> show databases;
 
 # Exit
 mysql> exit
