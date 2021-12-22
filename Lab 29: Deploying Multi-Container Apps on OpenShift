@@ -27,10 +27,13 @@
 
 # Review the status of the deployment
 [student@workstation multicontainer-application]$  oc get pods -w
+# Or
+oc get all
 # Ctrl+C to exit
 
 # Connect to the MySQL db server and populate the data to the item database
 # Configure port forwarding between workstation and the db pod running on port 3306
+# Terminal will hang
 [student@workstation multicontainer-application]$ oc port-forward mysql 3306:3306
 
 # Open another terminal and populate the data to the MySQL server using the MySQL client

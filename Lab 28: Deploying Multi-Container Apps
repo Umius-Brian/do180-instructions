@@ -44,14 +44,14 @@ podman run -d --name mysql -e MYSQL_DATABASE=items -e MYSQL_USER=user1 \
 -v $PWD/work/data:/var/lib/mysql/data \
 -p 30306:3306 \
 registry.redhat.io/rhel8/mysql-80:1
-# The $PWD/work/data local folder is mounted as a vollume in the container's file system
+# The $PWD/work/data local folder is mounted as a volume in the container's file system
 
 # Do the same to invoke the todoapi container in the same run.sh file
 podman run -d --name todoapi -e MYSQL_DATABASE=items -e MYSQL_USER=user1 \
 -e MYSQL_PASSWORD=mypa55 \
 -p 30080:30080 \
 do180/todonodejs
-# After each podman run command, ensure there is a sleep 9 command (if this steps has to be repeated, the work directory and its contents mus t be deleted before rerunning the run.sh script)
+# After each podman run command, ensure there is a sleep 9 command (if this steps has to be repeated, the work directory and its contents must be deleted before rerunning the run.sh script)
 
 # Verify that the run.sh script matches the solution script at /home/student/DO180/solutions/multicontainer-design/deploy/nodejs/networked/run.sh
 # Save the file and exit the editor

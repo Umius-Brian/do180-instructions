@@ -42,7 +42,7 @@ Objectives:
 
 # Next step is to evaluate the raised errors of the build process
 # Build step is triggered by bc created by OpenShift when S2I starts
-# By default, OpenShit process creates a build config named nodejs-hello, responsible for triggering the build process
+# By default, OpenShift process creates a BuildConfig named nodejs-hello, responsible for triggering the build process
 [student@workstation DO180-apps]$ oc logs bc/nodejs-hello
 # We find that there is no compatible version for express
 
