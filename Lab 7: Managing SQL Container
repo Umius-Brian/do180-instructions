@@ -11,7 +11,7 @@ Objective:
 
 # Download MySQL container image and attempt to start it
 [student@workstation ~]$ podman run --name mysql-db \
-> registry.redhat.io/rhel/mysql-80:1
+> registry.redhat.io/rhel8/mysql-80:1
 # It will specify for env variables
 # MYSQL_USER (regex: '^$')
 # MYSQL_PASSWORD (regex: '^[a-zA-Z0-9_~!@#$%^&*()-=<>,.?;:|]$')

@@ -27,7 +27,6 @@
 # user number:group number
 # unshare launches a process in a new namespace
 [student@workstation ~]$ podman unshare chown 27:27 /home/student/local/mysql
-
 # In order for the user running processes in the container to write files to the directory, gain permission using UID of the container. Podman unshare command provides a session to execute commands within the same user namespace as the process running inside the container
 
 # Create MySQL container instance with persistent storage
@@ -41,7 +40,7 @@
 # By default, MySQL database stores data in the /var/lib/mysql/data directory
 [student@workstation ~]$ podman run --name persist-db \
 > -d -v /home/student/localmysql:/var/lib/mysql/data \
-> -e MYSQL_USER=user1 MYSQL_PASSWORD=mypa55 \
+> -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 \
 > -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 \
 > registry.redhat.io/rhel8/mysql-80:1
 
