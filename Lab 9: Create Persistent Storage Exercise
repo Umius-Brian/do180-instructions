@@ -39,7 +39,7 @@
 # Mounts /home/student/local/mysql directory from host to /var/lib/mysql/directory in the container
 # By default, MySQL database stores data in the /var/lib/mysql/data directory
 [student@workstation ~]$ podman run --name persist-db \
-> -d -v /home/student/localmysql:/var/lib/mysql/data \
+> -d -v /home/student/local/mysql:/var/lib/mysql/data \
 > -e MYSQL_USER=user1 -e MYSQL_PASSWORD=mypa55 \
 > -e MYSQL_DATABASE=items -e MYSQL_ROOT_PASSWORD=r00tpa55 \
 > registry.redhat.io/rhel8/mysql-80:1
@@ -51,7 +51,7 @@
 [student@workstation ~]$ ls -ld /home/student/local/mysql/items
 # drwxr-x---. 2 100026 100026 6 Apr  8 07:31 /home/student/local/mysql/items
 
-# Alternatively, to also check UID from the container container
+# Alternatively, to also check UID from the container
 [student@workstation ~]$ podman unshare ls -ld /home/student/local/mysql/items
 # drwxr-x---. 2 27 27 6 Apr  8 07:31 /home/student/local/mysql/items
 

@@ -66,6 +66,7 @@ root@cfa21f02a77d:/# exit
 [student@workstation ~]$ podman run -d --name my-nginx \
 > -p 8280:80 do180/mynginx:v1.0
 [student@workstation ~]$ curl 127.0.0.1:8280
+# DO180 Page
 
 [student@workstation ~]$ lab image-review grade
 [student@workstation ~]$ lab image-review finish
