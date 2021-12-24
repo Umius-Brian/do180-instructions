@@ -23,7 +23,9 @@ Objectives:
 
 # Build the MySQL image using the provided Containerfile in the images/mysql directory
 [student@workstation multicontainer-review]$ cd images/mysql
+# Optional to ls and cat the Containerfile here
 [student@workstation mysql]$ podman build -t do180-mysql-80-rhel8 .
+[student@workstation mysql]$ podman images
 
 # Push the MySQL image to your Quay.io repo
 # In order for the image to be available for use in a template, tag it quay.io/${RHT_OCP4_QUAY_USER}/do180-mysql-80-rhel8 and push it to quay

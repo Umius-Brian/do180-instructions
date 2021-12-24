@@ -6,7 +6,7 @@ Objectives:
 # Router pods run inside infra nodes from within a cluster and connect to services
 # Pods, services, and routes are all connected to SDN
 
-# Routes connect to a public-facing IP and DNS host name to an internal-facing service IP
+# Routes connect a public-facing IP and DNS host name to an internal-facing service IP
 # It uses the exposed ports from the service to find endpoints
 # HAProxy is the default routing service pod
 # To improve performance and reduce latency, the router connects directly to pods using SDN
