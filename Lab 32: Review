@@ -70,6 +70,7 @@ quay.io/${RHT_OCP4_QUAY_USER}/do180-quote-php
 
 # Verify the deployment status (may take some time for the pods to start)
 [student@workstation multicontainer-review]$ oc get pods -w
+# or oc get all
 # Ctrl+C to exit
 
 # Expose the service quote-php to allow the PHP Quote app to be accessible through the OpenShift router and reachable from an external network
