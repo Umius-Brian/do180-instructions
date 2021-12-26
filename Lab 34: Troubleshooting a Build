@@ -24,7 +24,7 @@ Objectives:
 # Build a Node app using the Hello World image located at https://github.com/yourgituser/DO180-apps in the nodejs-helloworld directory
 
 # Run the oc new-app command provided in the ~/DO180/labs/troubleshoot-s2i/command.txt file
-# -i option indicates the builder image to use (nodejs:12)
+# -i option indicates the builder image to use (nodejs:12) from the image stream
 # --context-dir option defines which folder inside the project contains the source code on which the app will build
 # --build-env option defines an env variable to the builder pod (npm_config_registry env variable) so that it can reach the NPM registry
 [student@workstation DO180-apps]$ oc new-app \

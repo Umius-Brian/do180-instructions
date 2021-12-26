@@ -61,6 +61,9 @@ CMD ["sh", "nexus-start.sh"]
 [student@workstation local]$ podman logs inspiring_poincare | grep JettyServer
 
 # Test the container
+# -v means verbose mode
+# 2>&1 converts error messages to normal messages so that it may be piped
+# -E means either
 [student@workstation local]$ curl -v 127.0.0.1:18081/nexus/ 2>&1 \
 > | grep -E 'HTTP|<title>'
 > GET /nexus/ HTTP/1.1
@@ -97,6 +100,7 @@ CMD ["sh", "nexus-start.sh"]
 # ost: nexus-${RHT_OCP4_DEV_USER}-review.${RHT_OCP4_WILDCARD_DOMAIN}
 
 # Connect to the Nexus web app
+# Don't forget the slash at the end
 http://nexus-${RHT_OCP4_DEV_USER}-review.${RHT_OCP4_WILDCARD_DOMAIN}/nexus/
 
 [student@workstation ~]$ lab comprehensive-review grade

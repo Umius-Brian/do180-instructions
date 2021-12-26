@@ -11,20 +11,21 @@ Objectives:
 # Review the custom httpd.conf file at /home/student/DO180/labs/troubleshoot-container/conf/httpd.conf
 
 # Observe the ErrorLog directive in the file
+less conf/httpd.conf
 # This sends the httpd error log messages to stdout
-ErrorLog "/dev/stdout"
+# Observe ErrorLog "/dev/stdout"
 
 # Change default log level to debug
-LogLevl debug
-
+# Observe LogLevl debug
 # Redirect the httpd access log messages to stdout
-CustomLog "/dev/stdout" common
+# Observe CustomLog "/dev/stdout" common
 
 # Build a custom container to save an updated configuration file to the container
 # First, build a new image
 [student@workstation ~]$ cd ~/DO180/labs/troubleshoot-container
 [student@workstation troubleshoot-container]$ podman build \
 >  -t troubleshoot-container .
+# This builds from the Dockerfile in the current directory
 [student@workstation troubleshoot-container]$ cd ~
 
 # Verify that the image was created
@@ -38,6 +39,8 @@ CustomLog "/dev/stdout" common
 
 # Review the container log messages and events
 # View the container debug log messages
+# -f for following live (similar to -w)
+[student@workstation ~]$ podman ps
 [student@workstation ~]$ podman logs -f troubleshoot-container
 
 # Open a new terminal to access the web server home page 

@@ -1,6 +1,8 @@
 Objectives:
   - Identify and solve problems raised during the build and deployment process of a Node app
 
+[student@workstation ~]$ lab troubleshoot-review start
+
 # Load the environment configuration
 [student@workstation ~]$ source /usr/local/etc/ocp4.config
 
