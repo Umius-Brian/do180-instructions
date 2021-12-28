@@ -14,7 +14,6 @@ Objectives:
 # On workstation, execute git configcommand with credential.helper cache parameters to store in cache memory credentials for future use
 [student@workstation ~]$ git config --global credential.helper cache
   # if prompted for a password while using Git operations on command line, use access token
-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
 
 # Open a terminal on workstation machine and execute this command (cmd-c to start over)
 [student@workstation ~]$ lab-configure
@@ -23,7 +22,7 @@ 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
 # Line4/5: Personal GitHub and Quay account names
 # Quay: brian_bui_ibm
 # GitHub: umius-brian
-# Brianisbest06!
+# Redhat: brian.bui-ibm
 # Run lab-configure again if not working
 # If successful, ready to start exercises
 
