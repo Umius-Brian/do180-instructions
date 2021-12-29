@@ -7,7 +7,8 @@
 # mkdir: created directory /home/student/local
 # mkdir: created directory /home/student/local/mysql
 
-[student@workstation ~]$ ls -Zd /home/student/local/mysql
+# Use ls -ldZ for all?
+[student@workstation ~]$ ls -dZ /home/student/local/mysql
 # unconfined_u:object_r:user_home_t:s0 /home/student/local/mysql
 # user home type
 
