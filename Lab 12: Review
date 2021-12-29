@@ -55,7 +55,7 @@ ls -Zd local/mysql/
 
 # Access Bash shell inside container and verify items database and Item table are available and with data
 # Access Bash shell inside container
-[student@workstation ~]$ podman exec -it /bin/bash
+[student@workstation ~]$ podman exec -it mysql-2 /bin/bash
 # Connect to MySQL server
 bash-4.4$ mysql -uroot
 # List all databases and confirm items database is there
