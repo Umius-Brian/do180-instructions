@@ -38,6 +38,13 @@ CMD ["httpd", "-D", "FOREGROUND"]
 
 [student@workstation ~]$ lab dockerfile-create finish
 
+# When installing software from a Containerfile, clean yum caches
+dnf clean all -y
+
+# Exclude documentation and unnecessary dependencies
+RUN dnf install -y httpd --nodocs --setopt install_weak_deps=False
+
+# Use a minimal base image instead of a regular base image
 
 
 
