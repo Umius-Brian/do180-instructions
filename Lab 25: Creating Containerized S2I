@@ -23,7 +23,7 @@
 
 # Create a S2I app using the branch created and php-helloworld directory
 # Create the PHP app
-[student@workstation ~]$ oc new-app php:7.3 --name=php-helloworld \
+[student@workstation ~]$ oc new-app php:7.3 --name php-helloworld \
 https://github.com/${RHT_OCP4_GITHUB_USER}/DO180-apps#s2i \
 --context-dir php-helloworld
 

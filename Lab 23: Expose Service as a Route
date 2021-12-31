@@ -56,6 +56,12 @@ Objectives:
 
 [student@workstation ~]$ lab openshift-routes finish
 
+# oc get <resource_type> <resource_name> -o yaml is usually paired with oc create -f
+# oc edit
+# oc delete
+# oc exec <container_id>
+# podman -l means latest, whereas oc -l means label
+# oc get svc, deployments -l app=nexus
 
 
 

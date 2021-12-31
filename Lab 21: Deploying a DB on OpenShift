@@ -69,5 +69,5 @@ mysql> exit
 # Delete the project to remove all resources
 [student@workstation ~]$ oc delete project ${RHT_OCP4_DEV_USER}-mysql-openshift
 
-[student@workstation ~]$ lab openshift-resource finish
+[student@workstation ~]$ lab openshift-resources finish
 

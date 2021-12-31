@@ -14,7 +14,7 @@ RUN yum install -y httpd && \
 RUN sed -ri -e "/^Listen 80/c\Listen ${PORT}" /etc/httpd/conf/httpd.conf && \
     chown -R apache:apache /etc/httpd/logs/ && \
     chown -R apache:apache /run/httpd/
-# sed is a stream editor which performs basic text transformations on an input stream, original input doesn't modify unless we use -i flag
+# sed is a stream editor which performs basic text transformations on an input stream, original input doesn't modify unless we use cleacd  flag
 # Change Apache config file to listen to port 8080 instead of default port 80
 # Change ownership to user and group apache
 USER apache
