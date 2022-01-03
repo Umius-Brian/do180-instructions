@@ -86,7 +86,8 @@ print "A change is a coming!\n";
 
 [student@workstation php-helloworld]$ lab openshift-s2i finish
 
-
+# oc get all --selector app=php-helloworld -o name
+# oc delete all --selector app=nbviewer
 
 
 

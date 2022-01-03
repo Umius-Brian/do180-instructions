@@ -53,7 +53,7 @@ quay.io/${RHT_OCP4_QUAY_USER}/do180-quote-php
 [student@workstation quote-php]$ podman push \
 quay.io/${RHT_OCP4_QUAY_USER}/do180-quote-php
 
-# Go to the /home/student/DO180/labs/multicontainer-review/ direcotyr and review the provided template quote-php-template.json file
+# Go to the /home/student/DO180/labs/multicontainer-review/ directory and review the provided template quote-php-template.json file
 # Note the pods, services, and pvcs in the template
 [student@workstation quote-php]$ cd ~/DO180/labs/multicontainer-review
 
