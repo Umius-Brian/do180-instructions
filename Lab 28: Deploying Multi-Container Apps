@@ -72,11 +72,16 @@ do180/todonodejs
 
 # Explore the env variables exposed in the API container
 [student@workstation networked]$ podman exec -it todoapi env
+# ...output ommitted...
+# HOME=/opt/app-root/src
+# MYSQL_DATABASE=items
+# MYSQL_USER=user1
+# MYSQL_PASSWORD=mypa55
+# APP_ROOT=/opt/app-root
 
 # Test the app
 # -w "\n" lets the shell prompt appear at the next line rather than merging with the output in the same line
-[student@workstation networked]$ curl -w "\n" \
-http://127.0.0.1:30080/todo/api/items/1
+[student@workstation networked]$ curl -w "\n" http://127.0.0.1:30080/todo/api/items/1
 # {"id":1,"description":"Pick up newspaper","done":false}
 
 # Point browser to http://127.0.0.1:30080/todo/ to see the To Do List app

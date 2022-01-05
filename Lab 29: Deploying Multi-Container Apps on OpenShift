@@ -17,7 +17,7 @@
 # Review the YAML file at /home/student/DO180/labs/multicontainer-application/todo-app.yml
 # todoapi pod defines the Node app
 # mysql pod defines the MySQL db
-# todoapi service provides connectivity to the Node pod
+# todoapi service provides connectivity to the Node app pod
 # mysql service provides connectivity to the MySQL pod
 # dbclaim PVC defines the MySQL /var/lib/mysql/data volume
 
