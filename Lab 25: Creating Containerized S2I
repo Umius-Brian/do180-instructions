@@ -71,7 +71,7 @@ print "A change is a coming!\n";
 # Start a new S2I build process and wait for it to build and deploy
 [student@workstation php-helloworld]$ oc start-build php-helloworld
 # build.build.openshift.io/php-helloworld-2 started
-[student@workstation php-helloworld]$ oc logs php-hellworld-2-build -f
+[student@workstation php-helloworld]$ oc logs php-helloworld-2-build -f
 # Push successful (may have to wait and retry because logs take awhile)
 
 # Verify the new version of the app is running
