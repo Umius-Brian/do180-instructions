@@ -43,4 +43,12 @@ podman rmi
 # To remove obsolete images and other resources
 oc adm prune
 
+# Check logs
+# Make sure S2I user is running as non-root, otherwise chown or set SELinux context permission
+# Centralize shared parameters across pods inside ConfigMaps
+# When redeploying an application, delete the pvc then the pv, then create the pv
+oc delete pv <pv_name>
+oc create -f pv <pv_resource_file>
+# Use podman rmi to remove an image from the registry with the same name and tag before pushing it
+# Use oc adm prune to remove obsolete images and other resources
 
