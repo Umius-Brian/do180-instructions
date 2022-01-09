@@ -53,6 +53,10 @@ less conf/httpd.conf
 
 [student@workstation ~]$ lab troubleshoot-container finish
 
+# podman run -p can only be configured after the container has started
+# oc port-forward can be created and destroyed any time after a pod is created
+# oc port-forward is considered more secure than opdman run -p
+
 
 
 

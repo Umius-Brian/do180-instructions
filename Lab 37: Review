@@ -41,7 +41,7 @@ Objectives:
 
 # Update the express version in package.json with a value of 4.x
 # Commit and push
-# sed stands for stream editor and allows functions suh as searching, find and replace, insertion or deletion
+# sed stands for stream editor and allows functions such as searching, find and replace, insertion or deletion
 [student@workstation DO180-apps]$ cd nodejs-app
 [student@workstation nodejs-app]$ sed -i s/4.20/4.x/ package.json
 [student@workstation nodejs-app]$ cat package.json
@@ -113,3 +113,5 @@ Objectives:
 # Use oc logs to access logs for BC and Deployment objects, as well as individual pods within OpenShift
 # -f option allows monitoring log output in real-time for both podman logs and oc logs
 # oc port-forward to connect directly to a port on an app pod (leverage this on non-prod pods because interactions can alter the behavior of pods)
+
+# Check build, then deployment, for errors

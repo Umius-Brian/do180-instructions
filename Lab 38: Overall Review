@@ -88,7 +88,7 @@ CMD ["sh", "nexus-start.sh"]
 >  -p ${RHT_OCP4_DEV_PASSWORD} ${RHT_OCP4_MASTER_API}
 [student@workstation openshift]$ oc new-project ${RHT_OCP4_DEV_USER}-review
 
-# Replace RHT_OCP4_QUAY_USEr in the resources file with Quay usernmae and create the K8s resources
+# Replace RHT_OCP4_QUAY_USER in the resources file with Quay username and create the K8s resources
 [student@workstation openshift]$ export RHT_OCP4_QUAY_USER
 [student@workstation openshift]$ envsubst < resources/nexus-deployment.yaml \
 > | oc create -f -

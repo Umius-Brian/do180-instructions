@@ -29,6 +29,7 @@ podman logs <container_name>
 oc logs <pod_name> [-c <container_name>]
 
 # High-level logging and auditing facilities are called events in OpenShift
+# This command spans the whole cluster (it's a lot of information)
 oc get events
 
 # These events don't filter and span the whole RHOCP cluster
@@ -44,14 +45,14 @@ oc exec [options] pod [-c container] -- command [arguments]
 # To start a bash shell for the myhttpdpod pod
 oc exec -it myhttppod /bin/bash
 
-# To access app logs, such as the Apache error log from a container
+# To access app logs saved to disk (aka ephemeral storage), such as the Apache error log from a container
 podman exec apache-container cat /var/log/httpd/error_log
 
 # podman run -v allows mounting of host binaries folders such as /bin, /sbin, and /lib in order to use some of the troubleshooting commands that are removed from container images in order to save space
 # To access these commands, change the pod resource definition file to define volumeMounts and volumeClaims, and create a hostPath persistent volume
 
 # Start a container and override the image's /bin folder with that of the host's
-podman run -it -v /bin:/bin image
+podman run -it -v /bin:/bin image /bin/bash
 
 # Transfer files in and out of containers by using volume mounts
 # Mount a local directory to copy data into a container; could be useful when you don't want to rebuild the image
