@@ -3,7 +3,7 @@
 # A template can explicitly specify parameters or have it generated (like a db password)
 
 # To get preinstalled OpenShift templates
-oc get temmplates -n openshift
+oc get templates -n openshift
 
 # To show YAML template definitions
 oc get template mysql-persistent -n openshift -o yaml
