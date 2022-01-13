@@ -35,7 +35,7 @@ oc adm policy add-scc-to-user anyuid -z default
 
 # If faced with a problem where a pod is not able to allocate a pvc even though the pv indicates that the claim has been released, delete the pvc then the pv, and recreate the pv
 oc delete pv <pv_name>
-oc create-f <pv_resource_file>
+oc create -f <pv_resource_file>
 
 # If you push a new image to the registry with the same name and tag as a locally-cached image on teh node where the pod is scheduled to run, remove the image from each node the pod is scheduled on
 podman rmi
