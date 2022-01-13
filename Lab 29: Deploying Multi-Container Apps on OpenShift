@@ -64,6 +64,3 @@ oc get all
 
 
 [student@workstation ~]$ lab multicontainer-application finish
-
-
-
