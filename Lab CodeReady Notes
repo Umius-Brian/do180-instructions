@@ -106,3 +106,8 @@ sudo semanage fcontext -a -t container_file_t "/hostdir(/.*)?"
 sudo restorecon -Rv /hostdir
 # Mount storage
 podman run -v /hostdir:/dir-in-container myimage
+
+
+
+COPY file_name.zip destination
+RUN unzip file_name.zip
