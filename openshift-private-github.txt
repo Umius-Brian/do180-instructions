@@ -1,0 +1,79 @@
+# One thing to keep in mind: public SSH key goes in Git repo or account, and private SSH key goes in OpenShift
+
+- Open Terminal
+
+# List all SSH keys, if available
+$ ls -la ~/.ssh
+
+# Check directory listing to see if you already have a public SSH keys
+# If it is a GitHub repo you're trying to import to OpenShift, look for these filenames
+id_rsa.pub
+id_ecdsa.pub
+id_ed25519.pub
+
+# If error, need to create a supported public key for GitHub
+# Create a new SSH key
+# -N flag omits passphrase
+$ cd ~/.ssh
+$ ssh-keygen -t ed25519 -C "github email address" -f "my-crazy-project" -N ''
+
+# If prompted to enter a file in which to save the key, simply press enter to accept the default location
+
+# Begin process of adding SSH key to ssh-agent for management
+# Depending on environment, might need to run sudo -s -H before starting the agent
+# Or exec ssh-agent bash or exec ssh-agent zsh
+$ eval "$(ssh-agent -s)"
+> Agent pid <number>
+
+# Modify config file to automatically load keys into the ssh-agent and store passphrases in keychain
+$ open ~/.ssh/config
+
+# If the file doesn't exist, create one
+$ touch ~/.ssh/config
+
+# Open config file and modify it to contain the following lines
+$ open ~/.ssh/config
+# If you did not select a passphrase, then omit UseKeychain line
+Host *
+  AddKeysToAgent yes
+  UseKeychain yes
+  IdentityFile ~/.ssh/id_ed25519
+
+# If you see this error: /Users/USER/.ssh/config: line 16: Bad configuration option: usekeychain
+# Then add this line
+Host *
+  IgnoreUnknown UseKeychain
+
+# Add SSH private key to the ssh-agent and store passphrase in the keychain
+$ ssh-add -K ~/.ssh/id_ed25519
+# Enter your passphrase, if any
+# Replace name id_ed25519 with anme of private key file
+
+
+# Navigate to OpenShift web console
+# When importing a private repo from GitHub, create a Source Secret
+# Type in secret name (choose a name that is meaningful to your project)
+# Change authentication type to SSH key
+# Add in your private (not public) SSH key file by pasting secret key file (id_ed25519 without the .pub)
+# Continue with deploying your app and clicking Create
+# Note that for the repo name, you need the SSH URL for the repo 
+  # On the private repo page, click on Code, then SSH, and copy the link key
+
+# Authorize key in the individual private repo, which is the more secure method than authorizing for all of your repos
+# Navigate to private repo
+# Click Settings
+# Click Deploy keys and Add deploy key
+# Give your public key a title and paste in your public key
+# Allow write access if you wish to use the key to push to your repo (not necessary for cloud deployments)
+# Can add as many deploy keys as needed if you are building and deploying your apps into different environments
+
+# Add SSH key to GitHub account for all repos (not recommended for security reasons)
+# Copy SSH public key to clipboard
+$ pbcopy < ~/.ssh/id_ed25519.pub
+# Go to your GitHub profile, click on Settings, click on SSH and GPG keys under Access sidebar
+# Click New SSH key, add a label name, and paste SSH key
+
+
+
+
+

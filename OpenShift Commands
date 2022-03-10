@@ -14,3 +14,7 @@ oc edit                               edit resources from a resource definition 
 oc delete                             removes a resource from a cluster (although pods will automatically restart so understand the OpenShift architecture)
 
 oc exec <container_id>                executes commands from inside a container                               
+
+oc get users
+
+oc adm policy add-cluster-role-to-user cluster-admin <name>     give admin access to new user
