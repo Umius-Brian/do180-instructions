@@ -30,7 +30,7 @@ oc login <clusterURL>
 # Create an app based on a mysql image from Docker Hub with the label set to db=mysql
 [user@host ~]$ oc new-app mysql MYSQL_USER=user MYSQL_PASSWORD=pass MYSQL_DATABASE=testdb -l db=mysql
 
-# Create an app based on Docker image
+# Create an app based on Docker image from private registry
 oc new-app --docker-image=myregistry.com/mycompany/app --name=myapp
 
 # Create an app based on Git repo source code
@@ -82,4 +82,14 @@ oc get svc,deployments -l app=nexus
 
 # If more than one container in a pod
 oc exec {pod_name} -c {container_name}
+
+oc get RESOURCE_TYPE RESOURCE_NAME
+oc describe RESOURCE_TYPE RESOURCE_NAME
+oc create (usually paired with oc get RESOURCE_TYPE RESOURCE_NAME -o yaml)
+oc edit
+oc delete RESOURCE_TYPE name
+oc exec CONTAINER_ID options
+
+oc get svc, deployment -l app=nexus
+
 

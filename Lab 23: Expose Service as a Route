@@ -23,7 +23,7 @@ Objectives:
 [student@workstation ~]$ oc get pods -w
 # php-helloworld-74bb86f6cb-zt6wl   1/1     Running   0          5s
 # ^C
-# Alternatively monitor with oc logs -f php-helloworld-74bb86f6cb-zt6wl
+# Alternatively monitor the deployment logs with oc logs -f php-helloworld-74bb86f6cb-zt6wl
 # ^C
 
 # Review the service

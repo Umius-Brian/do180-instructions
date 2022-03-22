@@ -58,3 +58,6 @@ oc logs build/myapp-1
 oc get buildconfig
 # myapp          Source    Git       1
 oc start-build myapp
+
+# BuildConfig pod creates and pushes images to the internal container registry
+# Deployment pod reacts to new images or updated images and creates (or destroys) pods for deployment to OpenShift
