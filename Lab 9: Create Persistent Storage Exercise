@@ -49,7 +49,7 @@
 [student@workstation ~]$ podman ps --format="{{.ID}} {{.Names}} {{.Status}}"
 
 # Verify that host directory contains items directory
-[student@workstation ~]$ ls -ld /home/student/local/mysql/items
+[student@workstation ~]$ ls -ld /home/student/local//items
 # drwxr-x---. 2 100026 100026 6 Apr  8 07:31 /home/student/local/mysql/items
 
 # Alternatively, to also check UID from the container

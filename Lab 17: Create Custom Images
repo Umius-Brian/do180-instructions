@@ -28,4 +28,4 @@ Objectives:
 
 podman build -t NAME:TAG DIR
 # use -f for different working directory
-
+podman build -t NAME:TAG -f DIR
