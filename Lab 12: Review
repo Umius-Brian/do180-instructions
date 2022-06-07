@@ -17,7 +17,7 @@ Objectives:
 [student@workstation ~]$ podman unshare chown -Rv 27:27 /home/student/local/mysql
 
 # Verify 
-ls -Zd local/mysql/
+ls -ldZ local/mysql/
 
 # Deploy a MySQL container instance with the given name, run as daemon option, volume, container image, port forward address, environment variables
 [student@workstation ~]$ podman login registry.redhat.io

@@ -17,7 +17,7 @@ Objectives:
 [user@host ~]$ podman ps
 
 # To run container detached as a daemon in the background, use -d option
-# This returns container ID and allows you to run commands in the same termainl while container runs in the background
+# This returns container ID and allows you to run commands in the same terminal while container runs in the background
 [user@host ~]$ podamn run --name my-httpd-container \
 > -d registry.redhat.io/rhel8/httpd-24
 

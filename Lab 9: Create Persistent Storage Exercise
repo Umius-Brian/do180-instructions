@@ -53,7 +53,7 @@
 # drwxr-x---. 2 100026 100026 6 Apr  8 07:31 /home/student/local/mysql/items
 
 # Alternatively, to also check UID from the container
-[student@workstation ~]$ podman unshare ls -ld /home/student/local/mysql/items
+[student@workstation ~]$ podman unshare ls -ldZ /home/student/local/mysql/items
 # drwxr-x---. 2 27 27 6 Apr  8 07:31 /home/student/local/mysql/items
 
 [student@workstation ~]$ lab manage-storage finish
