@@ -28,7 +28,7 @@ oc login <clusterURL>
 [user@host ~]$ oc port-forward mysql-openshift-1-glqrp 3306:3306
 
 # Create an app based on a mysql image from Docker Hub with the label set to db=mysql
-[user@host ~]$ oc new-app mysql MYSQL_USER=user MYSQL_PASSWORD=pass MYSQL_DATABASE=testdb -l db=mysql
+[user@host ~]$ oc new-app mysql -p MYSQL_USER=user -p MYSQL_PASSWORD=pass -p MYSQL_DATABASE=testdb -l db=mysql
 
 # Create an app based on Docker image from private registry
 oc new-app --docker-image=myregistry.com/mycompany/app --name=myapp
