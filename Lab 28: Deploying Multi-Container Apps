@@ -47,7 +47,7 @@ registry.redhat.io/rhel8/mysql-80:1
 # The $PWD/work/data local folder is mounted as a volume in the container's file system
 
 # Do the same to invoke the todoapi container in the same run.sh file
-podman run -d --name todoapi -e MYSQL_DATABASE=items -e MYSQL_USER=user1 \
+podman run -d --name todoapi -e _DATABASE=items -e MYSQL_USER=user1 \
 -e MYSQL_PASSWORD=mypa55 \
 -p 30080:30080 \
 do180/todonodejs

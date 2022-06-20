@@ -13,7 +13,7 @@ Objectives:
 [root@f95d16108991 /]# id
 # uid=0(root) gid=0(root) groups=0(root)
 
-# Start a sleep process inside the container
+# St a sleep process inside the container
 [root@f95d16108991 /]# sleep 1000
 
 # On a new terminal, run ps to search for the process
@@ -28,7 +28,7 @@ Objectives:
 [student@workstation ~]$
 
 # Run the container as a regular user and check UID of a running process within it
-# Start the container from a Red Hat UBI as a regular user
+# St the container from a Red Hat UBI as a regular user
 [student@workstation ~]$ podman run --rm --name asuser -ti \
 > registry.access.redhat.com/ubi8:latest /bin/bash
 
