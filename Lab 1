@@ -20,9 +20,9 @@ Objectives:
 # API Endpoint: https://api.cluster.domain.example.com:6443
 # Username and password for OpenShift: 
 # Line4/5: Personal GitHub and Quay account names
-# Quay: brian_bui_ibm
-# GitHub: umius-brian
-# Redhat: brian.bui-ibm
+# Quay: <Quay username>
+# GitHub: <GitHub username>
+# Redhat: <Red Hat username>
 # Run lab-configure again if not working
 # If successful, ready to start exercises
 
