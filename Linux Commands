@@ -49,4 +49,11 @@ chown             change ownership and group ownership of files/directories
 -e                instruct script to exit on error
 -L                follow symbolic links
 -s                read same file or silent mode
-d
+
+
+vi filename
+
+i
+esc
+:x (save vi file)
+:q! (quit without saving)
